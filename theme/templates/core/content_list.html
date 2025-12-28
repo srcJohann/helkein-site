@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="mb-12">
+        <h1 class="text-4xl font-bold text-text-main mb-4">
+            {% if current_category %}
+                {{ current_category|title }}s
+            {% else %}
+                Conteúdo
+            {% endif %}
+        </h1>
+        <p class="text-muted text-lg">Explore nossa coleção de artigos, ensaios e resenhas.</p>
+    </div>
+
+    {% if not current_category %}
+    <!-- Featured Section (only on main content page) -->
+    <div class="mb-16">
+        <h2 class="text-2xl font-bold text-text-main mb-6 border-l-4 border-accent pl-4">Destaques</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {% for article in articles|slice:":2" %}
+            <div class="bg-surface border border-white/5 rounded-lg overflow-hidden hover:border-accent/50 transition-colors group flex flex-col">
+                <div class="w-full relative overflow-hidden" style="aspect-ratio: 1200/780;">
+                    {% if article.cover_image %}
+                        <img src="{{ article.cover_image.url }}" alt="{{ article.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    {% else %}
+                        <div class="w-full h-full bg-white/5 flex items-center justify-center text-muted">
+                            <span class="text-sm">Sem capa</span>
+                        </div>
+                    {% endif %}
+                    
+                    {% if article.required_plan %}
+                        <div class="absolute top-4 right-4 bg-accent text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg z-10">
+                            Plano {{ article.required_plan.name }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="p-6 flex-grow flex flex-col">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-xs font-bold text-accent uppercase tracking-wider">{{ article.get_category_display }}</span>
+                        <span class="text-xs text-muted">• {{ article.created_at|date:"d M Y" }}</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-text-main mb-3 group-hover:text-accent transition-colors">
+                        <a href="{% url 'article_detail' article.slug %}">{{ article.title }}</a>
+                    </h3>
+                    <p class="text-muted mb-4 line-clamp-3 flex-grow">{{ article.summary|default:article.content|striptags|truncatewords:30 }}</p>
+                    
+                    <div class="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
+                        <a href="{% url 'article_detail' article.slug %}" class="inline-flex items-center text-accent font-medium hover:text-white transition-colors">
+                            Ler mais
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </a>
+                        {% if article.required_plan %}
+                            <a href="{% url 'subscribe' %}" class="text-xs font-bold text-muted hover:text-accent transition-colors flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                Associe-se
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {% for article in articles %}
+            {% if not current_category and forloop.counter <= 2 %}
+                <!-- Skip first 2 if already shown in featured -->
+            {% else %}
+            <div class="bg-surface border border-white/5 rounded-lg overflow-hidden hover:border-accent/50 transition-colors group flex flex-col">
+                <div class="w-full relative overflow-hidden" style="aspect-ratio: 1200/780;">
+                    {% if article.cover_image %}
+                        <img src="{{ article.cover_image.url }}" alt="{{ article.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    {% else %}
+                        <div class="w-full h-full bg-white/5 flex items-center justify-center text-muted">
+                            <span class="text-sm">Sem capa</span>
+                        </div>
+                    {% endif %}
+                    
+                    {% if article.required_plan %}
+                        <div class="absolute top-4 right-4 bg-accent text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg z-10">
+                            Plano {{ article.required_plan.name }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="p-6 flex-grow flex flex-col">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-xs font-bold text-accent uppercase tracking-wider">{{ article.get_category_display }}</span>
+                        <span class="text-xs text-muted">• {{ article.created_at|date:"d M Y" }}</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-text-main mb-3 group-hover:text-accent transition-colors">
+                        <a href="{% url 'article_detail' article.slug %}">{{ article.title }}</a>
+                    </h3>
+                    <p class="text-muted mb-4 line-clamp-3 flex-grow">{{ article.summary|default:article.content|striptags|truncatewords:20 }}</p>
+                    
+                    <div class="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
+                        <a href="{% url 'article_detail' article.slug %}" class="inline-flex items-center text-accent font-medium hover:text-white transition-colors">
+                            Ler mais
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </a>
+                        {% if article.required_plan %}
+                            <a href="{% url 'subscribe' %}" class="text-xs font-bold text-muted hover:text-accent transition-colors flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                Associe-se
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% empty %}
+            <div class="col-span-3 text-center py-12">
+                <p class="text-muted text-lg">Nenhum conteúdo encontrado nesta categoria.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if not current_category and courses %}
+    <!-- Courses Section -->
+    <div id="cursos" class="mt-24">
+        <div class="flex justify-between items-end mb-8">
+            <div>
+                <h2 class="text-3xl font-bold text-text-main mb-2">Cursos</h2>
+                <p class="text-muted">Aprofunde seus conhecimentos com nossos cursos estruturados.</p>
+            </div>
+            <a href="#" class="text-accent hover:text-white transition-colors hidden md:block">Ver todos os cursos &rarr;</a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {% for course in courses %}
+            <div class="bg-surface border border-white/5 rounded-lg overflow-hidden hover:border-accent/50 transition-colors group flex flex-col">
+                <div class="w-full relative overflow-hidden" style="aspect-ratio: 1200/780;">
+                    {% if course.cover_image %}
+                        <img src="{{ course.cover_image.url }}" alt="{{ course.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    {% else %}
+                        <div class="w-full h-full bg-white/5 flex items-center justify-center text-muted">
+                            <span class="text-sm">Sem capa</span>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="absolute top-4 right-4 flex flex-col gap-2 items-end">
+                        <div class="bg-accent text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                            Curso
+                        </div>
+                        {% if course.required_plan %}
+                            <div class="bg-black/80 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full border border-white/10 shadow-lg">
+                                Plano {{ course.required_plan.name }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="p-6 flex-grow flex flex-col">
+                    <h3 class="text-xl font-bold text-text-main mb-2 group-hover:text-accent transition-colors">
+                        <a href="{% url 'course_detail' course.slug %}">{{ course.title }}</a>
+                    </h3>
+                    <p class="text-muted mb-4 line-clamp-2 flex-grow">{{ course.description }}</p>
+                    
+                    <div class="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
+                        <a href="{% url 'course_detail' course.slug %}" class="text-sm font-bold text-text-main hover:text-accent transition-colors">Ver detalhes</a>
+                        {% if course.required_plan %}
+                            <a href="{% url 'subscribe' %}" class="text-xs font-bold text-muted hover:text-accent transition-colors flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                Associe-se
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

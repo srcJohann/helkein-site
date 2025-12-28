@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contato - Helkein</title>
+  <link rel="stylesheet" href="styles.css">
+  <meta name="description" content="Entre em contato com a equipe do Helkein - Filosofia apresentada de forma simples, mas não simplificada.">
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+  <a href="index.html" class="logo"><img src="logo.png" alt="Helkein logo"><span class="visually-hidden">Helkein</span></a>
+      <span class="tagline">Filosofia simples, não simplificada</span>
+      <nav>
+        <a href="index.html">Início</a>
+        <a href="conteudo.html">Conteúdo</a>
+        <a href="novidades.html">Notícias</a>
+        <a href="sobre.html">Sobre</a>
+        <a href="contato.html">Contato</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn ghost" href="membros.html">Entrar</a>
+        <a class="btn primary" href="associe-se.html">Associe-se</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Contato</h1>
+    <p>Tem dúvidas, sugestões ou deseja colaborar? Entre em contato conosco.</p>
+
+    <!-- Informações de Contato -->
+    <section style="margin-top:2rem;">
+      <div class="grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="card" style="cursor: default;">
+          <div class="info" style="padding: 1.5rem; flex-direction: column; align-items: center; text-align: center; gap: 0.5rem;">
+            <span style="font-size: 2rem;">✉️</span>
+            <h3 class="title">Email</h3>
+            <p class="meta">contato@logos.com.br</p>
+          </div>
+        </div>
+
+        <div class="card" style="cursor: default;">
+          <div class="info" style="padding: 1.5rem; flex-direction: column; align-items: center; text-align: center; gap: 0.5rem;">
+            <span style="font-size: 2rem;">📍</span>
+            <h3 class="title">Endereço</h3>
+            <p class="meta">São Paulo, SP - Brasil</p>
+          </div>
+        </div>
+
+        <div class="card" style="cursor: default;">
+          <div class="info" style="padding: 1.5rem; flex-direction: column; align-items: center; text-align: center; gap: 0.5rem;">
+            <span style="font-size: 2rem;">🕒</span>
+            <h3 class="title">Horário</h3>
+            <p class="meta">Seg - Sex: 9h às 18h</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Formulário de Contato -->
+    <section style="margin-top:2.5rem;">
+      <h2>Envie sua Mensagem</h2>
+      <form class="contact-form" action="#" method="post">
+        <div class="form-group">
+          <label for="name">Nome Completo</label>
+          <input id="name" name="name" placeholder="Seu nome completo" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="seu@email.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="subject">Assunto</label>
+          <select id="subject" name="subject" style="padding: 0.9rem 1rem; border-radius: 12px; border: 1.5px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); color: var(--text); font-family: var(--font-sans); font-size: var(--fs-sm);">
+            <option value="">Selecione um assunto</option>
+            <option value="duvida">Dúvida sobre conteúdo</option>
+            <option value="colaboracao">Proposta de colaboração</option>
+            <option value="sugestao">Sugestão de tema</option>
+            <option value="parceria">Parceria institucional</option>
+            <option value="imprensa">Imprensa</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="message">Mensagem</label>
+          <textarea id="message" name="message" rows="6" placeholder="Escreva sua mensagem aqui..." required></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn primary" type="submit">Enviar Mensagem</button>
+          <button class="btn ghost" type="reset">Limpar</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- FAQ Rápido -->
+    <section style="margin-top:3rem;">
+      <h2>Perguntas Frequentes</h2>
+      <div class="grid" style="margin-top:1rem; grid-template-columns: repeat(2, 1fr);">
+        <div class="card" style="cursor: default;">
+          <div class="info" style="padding: 1.5rem; flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+            <h3 class="title">Como posso contribuir com artigos?</h3>
+            <p class="meta" style="line-height: 1.6;">Aceitamos submissões de artigos de pesquisadores e especialistas. Entre em contato pelo formulário selecionando "Proposta de colaboração".</p>
+          </div>
+        </div>
+
+        <div class="card" style="cursor: default;">
+          <div class="info" style="padding: 1.5rem; flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+            <h3 class="title">Vocês oferecem palestras ou workshops?</h3>
+            <p class="meta" style="line-height: 1.6;">Sim! Realizamos eventos online e presenciais. Confira nossa página de Notícias para os próximos eventos.</p>
+          </div>
+        </div>
+
+        <div class="card" style="cursor: default;">
+          <div class="info" style="padding: 1.5rem; flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+            <h3 class="title">Como me torno membro?</h3>
+            <p class="meta" style="line-height: 1.6;">Visite nossa página <a href="associe-se.html" style="color: var(--accent);">Associe-se</a> para conhecer os planos e benefícios disponíveis.</p>
+          </div>
+        </div>
+
+        <div class="card" style="cursor: default;">
+          <div class="info" style="padding: 1.5rem; flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+            <h3 class="title">Posso usar o conteúdo em trabalhos acadêmicos?</h3>
+            <p class="meta" style="line-height: 1.6;">Sim, desde que devidamente citado. Todos os nossos artigos incluem informações para citação no formato ABNT.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Redes Sociais -->
+    <section class="cta-section" style="margin-top:3rem; text-align:center; padding: 2rem; background: var(--glass); border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.05);">
+      <h2 style="color: var(--text);">Siga-nos nas Redes Sociais</h2>
+      <p style="color: var(--muted); max-width: 600px; margin: 1rem auto;">Acompanhe nossas atualizações e participe de discussões nas redes sociais.</p>
+      <div class="social" style="justify-content: center; margin-top: 1.5rem; gap: 1.5rem;">
+        <a href="#" title="Twitter" aria-label="Twitter" style="width: 50px; height: 50px; font-size: 1.5rem;">𝕏</a>
+        <a href="#" title="YouTube" aria-label="YouTube" style="width: 50px; height: 50px; font-size: 1.5rem;">▶</a>
+        <a href="#" title="LinkedIn" aria-label="LinkedIn" style="width: 50px; height: 50px; font-size: 1.5rem;">in</a>
+        <a href="#" title="Instagram" aria-label="Instagram" style="width: 50px; height: 50px; font-size: 1.5rem;">📷</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer content">
+      <div class="col">
+        <h4>Conteúdo</h4>
+        <a href="conteudo.html#artigos">Artigos</a>
+        <a href="conteudo.html#ensaios">Ensaios</a>
+        <a href="conteudo.html#resenhas">Resenhas</a>
+        <a href="conteudo.html#multimidia">Multimídia</a>
+      </div>
+      <div class="col">
+        <h4>Institucional</h4>
+        <a href="sobre.html">Sobre Nós</a>
+        <a href="novidades.html">Notícias</a>
+        <a href="contato.html">Contato</a>
+      </div>
+      <div class="col">
+        <h4>Membros</h4>
+        <a href="membros.html">Entrar</a>
+        <a href="associe-se.html">Associe-se</a>
+        <a href="#beneficios">Benefícios</a>
+      </div>
+      <div class="col">
+        <h4>Redes Sociais</h4>
+        <div class="social">
+          <a href="#" title="Twitter" aria-label="Twitter">𝕏</a>
+          <a href="#" title="YouTube" aria-label="YouTube">▶</a>
+          <a href="#" title="LinkedIn" aria-label="LinkedIn">in</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer bottom">
+      <p>© 2025 Helkein — Divulgação Científica e Filosófica. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+</body>
+</html>

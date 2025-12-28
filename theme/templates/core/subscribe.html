@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="text-center max-w-3xl mx-auto mb-16">
+        <h1 class="text-4xl md:text-5xl font-bold text-text-main mb-6">Invista no seu Intelecto</h1>
+        <p class="text-xl text-muted">Tenha acesso ilimitado a todo o nosso conteúdo, cursos exclusivos e uma comunidade de pensadores.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <!-- Apoiador Plan -->
+        <div class="bg-surface border border-white/5 rounded-lg p-8 flex flex-col hover:border-accent/30 transition-colors">
+            <h3 class="text-xl font-bold text-text-main mb-4">Apoiador</h3>
+            <div class="text-4xl font-bold text-text-main mb-6">R$ 15<span class="text-lg text-muted font-normal">/mês</span></div>
+            <p class="text-sm text-muted mb-6 italic">"O primeiro passo para a sabedoria é o desejo de aprender."</p>
+            <ul class="space-y-4 mb-8 flex-grow text-muted">
+                <li class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Acesso ao conteúdo restrito do site
+                </li>
+                <li class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Grupo de assinantes no Telegram
+                </li>
+            </ul>
+            <a href="{% if apoiador %}{% url 'create_checkout_session' apoiador.id %}{% else %}#{% endif %}" class="block w-full py-3 px-6 bg-white/5 text-text-main font-bold text-center rounded-md hover:bg-white/10 transition-colors border border-white/10">Assinar Apoiador</a>
+        </div>
+
+        <!-- Irrestrito Plan -->
+        <div class="bg-surface border border-accent rounded-lg p-8 flex flex-col relative transform md:-translate-y-4 shadow-2xl shadow-accent/10">
+            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-accent text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider">
+                Recomendado
+            </div>
+            <h3 class="text-xl font-bold text-text-main mb-4">Irrestrito</h3>
+            <div class="text-4xl font-bold text-text-main mb-6">R$ 20<span class="text-lg text-muted font-normal">/mês</span></div>
+            <p class="text-sm text-muted mb-6 italic">"Aproxime-se do fogo do conhecimento e veja o mundo com novos olhos."</p>
+            <ul class="space-y-4 mb-8 flex-grow text-muted">
+                <li class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Tudo do plano Apoiador
+                </li>
+                <li class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Close Friends no Instagram @helkeinfilosofia
+                </li>
+                <li class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Conteúdos exclusivos de bastidores
+                </li>
+            </ul>
+            <a href="{% if irrestrito %}{% url 'create_checkout_session' irrestrito.id %}{% else %}#{% endif %}" class="block w-full py-3 px-6 bg-accent text-white font-bold text-center rounded-md hover:bg-accent-hover transition-colors shadow-lg shadow-accent/20">Assinar Irrestrito</a>
+        </div>
+
+        <!-- Mecenas Plan -->
+        <div class="bg-surface border border-white/5 rounded-lg p-8 flex flex-col hover:border-accent/30 transition-colors">
+            <h3 class="text-xl font-bold text-text-main mb-4">Mecenas</h3>
+            <div class="text-4xl font-bold text-text-main mb-6">R$ 50<span class="text-lg text-muted font-normal">/mês</span></div>
+            <p class="text-sm text-muted mb-6 italic">"Para quem busca não apenas ler, mas refinar o próprio pensamento."</p>
+            <ul class="space-y-4 mb-8 flex-grow text-muted">
+                <li class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Todos os benefícios anteriores
+                </li>
+                <li class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Acompanhamento com leitura crítica
+                </li>
+                <li class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Notas e conselhos conceituais
+                </li>
+                <li class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Orientação estilística personalizada
+                </li>
+            </ul>
+            <a href="{% if mecenas %}{% url 'create_checkout_session' mecenas.id %}{% else %}#{% endif %}" class="block w-full py-3 px-6 bg-white/5 text-text-main font-bold text-center rounded-md hover:bg-white/10 transition-colors border border-white/10">Assinar Mecenas</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

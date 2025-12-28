@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="flex items-center justify-center min-h-[calc(100vh-200px)] py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 bg-surface p-8 rounded-xl border border-white/5 shadow-xl">
+        <div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-text-main">
+                Entrar na sua conta
+            </h2>
+        </div>
+        <form class="mt-8 space-y-6" method="post">
+            {% csrf_token %}
+            {% if form.errors %}
+                <div class="bg-red-900/20 border-l-4 border-red-500 p-4 mb-4">
+                    <p class="text-red-400 text-sm">Por favor, corrija os erros abaixo.</p>
+                </div>
+            {% endif %}
+            
+            <div class="rounded-md shadow-sm space-y-4">
+                <div>
+                    <label for="id_username" class="block text-sm font-medium text-text-main mb-1">Usuário</label>
+                    <input id="id_username" name="username" type="text" required class="appearance-none rounded-md relative block w-full px-4 py-3 bg-bg border border-white/10 placeholder-muted text-text-main focus:outline-none focus:ring-accent focus:border-accent focus:z-10 sm:text-sm transition-colors" placeholder="Seu usuário">
+                </div>
+                <div>
+                    <label for="id_password" class="block text-sm font-medium text-text-main mb-1">Senha</label>
+                    <input id="id_password" name="password" type="password" required class="appearance-none rounded-md relative block w-full px-4 py-3 bg-bg border border-white/10 placeholder-muted text-text-main focus:outline-none focus:ring-accent focus:border-accent focus:z-10 sm:text-sm transition-colors" placeholder="Sua senha">
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-md text-white bg-accent hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent transition-colors shadow-lg shadow-accent/20">
+                    Entrar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <section class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">Sobre Nós</h1>
+        <p class="max-w-2xl mx-auto text-lg text-gray-600">
+            Conheça nossa história, missão e a equipe por trás do Helkein.
+        </p>
+    </section>
+
+    <!-- Missão Section -->
+    <section class="bg-white p-8 md:p-12 rounded-xl shadow-sm border border-gray-200 mb-16 max-w-4xl mx-auto">
+        <h2 class="text-3xl font-bold text-blue-600 mb-6">Nossa Missão</h2>
+        <p class="text-lg text-gray-600 leading-relaxed mb-6">
+            O Helkein nasceu da crença de que o conhecimento científico e filosófico deve ser acessível a todos. Nossa missão é democratizar o saber, promovendo o pensamento crítico e a curiosidade intelectual através de conteúdo de qualidade, rigoroso e acessível.
+        </p>
+        <p class="text-lg text-gray-600 leading-relaxed">
+            Acreditamos que a ciência e a filosofia são ferramentas fundamentais para compreender o mundo e tomar decisões informadas. Por isso, trabalhamos para traduzir conceitos complexos em linguagem clara, sem perder a profundidade e o rigor que caracterizam o pensamento acadêmico.
+        </p>
+    </section>
+
+    <!-- Valores Section -->
+    <section class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Nossos Valores</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <span>🔬</span> Rigor Científico
+                </h3>
+                <p class="text-gray-600 text-sm leading-relaxed">Todo nosso conteúdo é baseado em evidências e revisado por especialistas nas respectivas áreas.</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <span>📚</span> Acessibilidade
+                </h3>
+                <p class="text-gray-600 text-sm leading-relaxed">Traduzimos conhecimento complexo em linguagem clara, tornando a ciência acessível a todos.</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <span>🤔</span> Pensamento Crítico
+                </h3>
+                <p class="text-gray-600 text-sm leading-relaxed">Incentivamos o questionamento, a análise e a reflexão como pilares do conhecimento.</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <span>🌍</span> Diversidade
+                </h3>
+                <p class="text-gray-600 text-sm leading-relaxed">Valorizamos múltiplas perspectivas e vozes na construção do conhecimento.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- História Section -->
+    <section class="bg-gray-50 p-8 md:p-12 rounded-xl border border-gray-200 mb-16 max-w-4xl mx-auto">
+        <h2 class="text-3xl font-bold text-blue-600 mb-6">Nossa História</h2>
+        <p class="text-lg text-gray-600 leading-relaxed mb-6">
+            Fundado em 2020 por um grupo de pesquisadores, professores e comunicadores científicos, o Helkein surgiu da necessidade de criar um espaço dedicado à divulgação científica e filosófica de qualidade em língua portuguesa.
+        </p>
+        <p class="text-lg text-gray-600 leading-relaxed mb-6">
+            O nome "Helkein" foi escolhido em referência ao conceito grego que significa "razão", "palavra" e "discurso" — elementos fundamentais para o pensamento crítico e a comunicação do conhecimento.
+        </p>
+        <p class="text-lg text-gray-600 leading-relaxed">
+            Desde então, publicamos mais de 500 artigos, ensaios e resenhas, alcançando milhares de leitores interessados em expandir seus horizontes intelectuais.
+        </p>
+    </section>
+</div>
+{% endblock %}

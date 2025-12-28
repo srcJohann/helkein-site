@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+/**
+  * A catch-all path to Django template files, JavaScript, and Python files
+  * that contain Tailwind CSS classes and will be scanned by Tailwind to generate the final CSS file.
+  *
+  * If your final CSS file is not being updated after code changes, you may want to broaden or narrow
+  * the scope of this path.
+  */
+@source "../../../**/*.{html,py,js}";
+
+@theme {
+  --color-bg: #0a0c0f;
+  --color-surface: #0e1215;
+  --color-muted: #a0b0c0;
+  --color-text-main: #fbeedf;
+  --color-text-hover: #7EAED6;
+  --color-accent: #c9b37e;
+  --color-accent-hover: #a38f5b;
+  --color-accent-2: #ff7aa2;
+  
+  --font-sans: "Cormorant Garamond", serif;
+}
+
+/* Force bold weight if requested globally, or just let the font family take over. 
+   The user said "Cormorant Garamond Bold", which might mean they want the bold weight as default.
+   However, usually that looks bad for body text. I will set the family. 
+   If they really want everything bold, I can add a base style.
+*/
+body {
+    font-weight: 700; /* As requested: "Cormorant Garamond Bold" everywhere */
+}

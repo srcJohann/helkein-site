@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <section class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">Contato</h1>
+        <p class="max-w-2xl mx-auto text-lg text-gray-600">
+            Tem dúvidas, sugestões ou deseja colaborar? Entre em contato conosco.
+        </p>
+    </section>
+
+    <!-- Informações de Contato -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 max-w-5xl mx-auto">
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center">
+            <div class="text-4xl mb-4">✉️</div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Email</h3>
+            <p class="text-gray-600">contato@helkein.com.br</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center">
+            <div class="text-4xl mb-4">📍</div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Endereço</h3>
+            <p class="text-gray-600">São Paulo, SP - Brasil</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col items-center text-center">
+            <div class="text-4xl mb-4">🕒</div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Horário</h3>
+            <p class="text-gray-600">Seg - Sex: 9h às 18h</p>
+        </div>
+    </section>
+
+    <!-- Formulário de Contato -->
+    <section class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-sm border border-gray-200">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Envie sua Mensagem</h2>
+        <form action="#" method="post" class="space-y-6">
+            {% csrf_token %}
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>
+                <input id="name" name="name" type="text" placeholder="Seu nome completo" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input id="email" name="email" type="email" placeholder="seu@email.com" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <div>
+                <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Assunto</label>
+                <select id="subject" name="subject" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 bg-white">
+                    <option value="">Selecione um assunto</option>
+                    <option value="duvida">Dúvida sobre conteúdo</option>
+                    <option value="colaboracao">Proposta de colaboração</option>
+                    <option value="sugestao">Sugestão de tema</option>
+                    <option value="parceria">Parceria institucional</option>
+                    <option value="imprensa">Imprensa</option>
+                    <option value="outro">Outro</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Mensagem</label>
+                <textarea id="message" name="message" rows="6" placeholder="Escreva sua mensagem aqui..." required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"></textarea>
+            </div>
+
+            <div class="flex gap-4">
+                <button type="submit" class="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors shadow-sm">Enviar Mensagem</button>
+                <button type="reset" class="px-6 py-3 bg-gray-100 text-gray-700 font-bold rounded-lg hover:bg-gray-200 transition-colors">Limpar</button>
+            </div>
+        </form>
+    </section>
+</div>
+{% endblock %}

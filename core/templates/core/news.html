@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <section class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">Notícias</h1>
+        <p class="max-w-2xl mx-auto text-lg text-gray-600">
+            Fique por dentro das últimas novidades em ciência, filosofia e das atualizações do Helkein.
+        </p>
+    </section>
+
+    <!-- Destaque Principal -->
+    <section class="mb-16">
+        <div class="relative rounded-xl overflow-hidden bg-gray-900 text-white">
+            <div class="absolute inset-0 bg-cover bg-center opacity-60" style="background-image: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1200&h=600&fit=crop');"></div>
+            <div class="relative p-8 md:p-16 max-w-3xl">
+                <span class="inline-block px-3 py-1 mb-4 text-xs font-bold uppercase tracking-wider bg-blue-600 text-white rounded-full">Destaque</span>
+                <h2 class="text-3xl md:text-5xl font-bold mb-6 leading-tight">Descoberta de Exoplaneta Potencialmente Habitável</h2>
+                <p class="text-lg md:text-xl text-gray-200 mb-8">Astrônomos anunciam a descoberta de um novo exoplaneta na zona habitável de sua estrela, abrindo novas possibilidades para a busca por vida extraterrestre.</p>
+                <a href="#" class="inline-block px-6 py-3 bg-white text-gray-900 font-bold rounded-lg hover:bg-gray-100 transition-colors">Ler Notícia Completa</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notícias Recentes -->
+    <section class="mb-16">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8 border-l-4 border-blue-600 pl-4">Notícias Recentes</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <article class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100 flex flex-col">
+                <div class="h-40 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&h=340&fit=crop');"></div>
+                <div class="p-4 flex-grow flex flex-col">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-lg font-bold text-gray-800 leading-tight hover:text-blue-600 transition-colors">
+                            <a href="#">Novo Estudo Revela Avanços em Computação Quântica</a>
+                        </h3>
+                    </div>
+                    <div class="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+                        <span>25 Nov 2025</span>
+                        <span class="px-2 py-1 bg-blue-50 text-blue-600 rounded-full">Tecnologia</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100 flex flex-col">
+                <div class="h-40 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=600&h=340&fit=crop');"></div>
+                <div class="p-4 flex-grow flex flex-col">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-lg font-bold text-gray-800 leading-tight hover:text-blue-600 transition-colors">
+                            <a href="#">Pesquisadores Brasileiros Fazem Descoberta sobre Alzheimer</a>
+                        </h3>
+                    </div>
+                    <div class="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+                        <span>24 Nov 2025</span>
+                        <span class="px-2 py-1 bg-purple-50 text-purple-600 rounded-full">Neurociência</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100 flex flex-col">
+                <div class="h-40 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=600&h=340&fit=crop');"></div>
+                <div class="p-4 flex-grow flex flex-col">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-lg font-bold text-gray-800 leading-tight hover:text-blue-600 transition-colors">
+                            <a href="#">Congresso Internacional de Filosofia Anuncia Programação</a>
+                        </h3>
+                    </div>
+                    <div class="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+                        <span>23 Nov 2025</span>
+                        <span class="px-2 py-1 bg-yellow-50 text-yellow-600 rounded-full">Eventos</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100 flex flex-col">
+                <div class="h-40 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=340&fit=crop');"></div>
+                <div class="p-4 flex-grow flex flex-col">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-lg font-bold text-gray-800 leading-tight hover:text-blue-600 transition-colors">
+                            <a href="#">Relatório da ONU Alerta sobre Mudanças Climáticas</a>
+                        </h3>
+                    </div>
+                    <div class="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+                        <span>22 Nov 2025</span>
+                        <span class="px-2 py-1 bg-green-50 text-green-600 rounded-full">Meio Ambiente</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+</div>
+{% endblock %}

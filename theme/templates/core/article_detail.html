@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<article class="container mx-auto px-4 py-12 max-w-4xl">
+    <header class="mb-12 text-center">
+        <div class="flex items-center justify-center gap-2 mb-4">
+            <span class="text-sm font-bold text-accent uppercase tracking-wider">{{ article.get_category_display }}</span>
+            <span class="text-sm text-muted">• {{ article.created_at|date:"d M Y" }}</span>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-bold text-text-main mb-6 leading-tight">{{ article.title }}</h1>
+        {% if article.authors.exists %}
+        <p class="text-muted">
+            Por 
+            {% for author in article.authors.all %}
+                <span class="text-text-main font-medium">{{ author.get_full_name|default:author.username }}</span>{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+        {% endif %}
+    </header>
+
+    {% if article.cover_image %}
+    <div class="mb-12 rounded-lg overflow-hidden shadow-2xl border border-white/5">
+        <img src="{{ article.cover_image.url }}" alt="{{ article.title }}" class="w-full h-auto">
+    </div>
+    {% endif %}
+
+    <div class="prose prose-invert prose-lg max-w-none mx-auto">
+        {% if article.summary %}
+        <div class="text-xl text-muted mb-8 font-serif italic border-l-4 border-accent pl-6">
+            {{ article.summary|linebreaks }}
+        </div>
+        {% endif %}
+
+        {{ article.content|linebreaks }}
+    </div>
+
+    {% if article.pdf_file %}
+    <div class="mt-12">
+        <h3 class="text-2xl font-bold text-text-main mb-6">Documento PDF</h3>
+        <div class="bg-surface border border-white/5 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-muted text-sm">Visualização do documento</span>
+            </div>
+            
+            <!-- Custom PDF Viewer Container -->
+            <div id="pdf-viewer-container" class="w-full h-[800px] overflow-y-auto bg-gray-900 rounded-md border border-white/10 p-4 flex flex-col items-center gap-4 relative">
+                <div id="pdf-loading" class="absolute inset-0 flex items-center justify-center text-white z-10 bg-gray-900/80">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                    <span class="ml-2">Carregando documento...</span>
+                </div>
+            </div>
+
+            <!-- PDF.js Scripts -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+            <script>
+                (function() {
+                    const initPDFViewer = async () => {
+                        if (typeof pdfjsLib === 'undefined') {
+                            setTimeout(initPDFViewer, 100);
+                            return;
+                        }
+
+                        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+                        const url = "{% url 'serve_protected_pdf' article.slug %}";
+                        const container = document.getElementById('pdf-viewer-container');
+                        const loadingIndicator = document.getElementById('pdf-loading');
+
+                        if (!container) return;
+
+                        // Disable context menu
+                        container.addEventListener('contextmenu', event => event.preventDefault());
+
+                        try {
+                            const loadingTask = pdfjsLib.getDocument(url);
+                            const pdf = await loadingTask.promise;
+                            
+                            loadingIndicator.style.display = 'none';
+
+                            for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                                const page = await pdf.getPage(pageNum);
+                                
+                                // Calculate scale to fit container width
+                                const containerWidth = container.clientWidth - 48; // padding adjustment
+                                const unscaledViewport = page.getViewport({ scale: 1 });
+                                const scale = Math.min(1.5, containerWidth / unscaledViewport.width); // Max scale 1.5
+                                const viewport = page.getViewport({ scale });
+
+                                const canvas = document.createElement('canvas');
+                                const context = canvas.getContext('2d');
+                                canvas.height = viewport.height;
+                                canvas.width = viewport.width;
+                                canvas.className = "shadow-lg mb-4 bg-white max-w-full";
+
+                                // Disable context menu on canvas
+                                canvas.addEventListener('contextmenu', event => event.preventDefault());
+
+                                container.appendChild(canvas);
+
+                                const renderContext = {
+                                    canvasContext: context,
+                                    viewport: viewport
+                                };
+                                await page.render(renderContext).promise;
+                            }
+                        } catch (error) {
+                            console.error('Error loading PDF:', error);
+                            if (loadingIndicator) {
+                                loadingIndicator.innerHTML = '<span class="text-red-400">Erro ao carregar o documento.</span>';
+                            }
+                        }
+                    };
+
+                    initPDFViewer();
+                })();
+            </script>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if article.tags %}
+    <div class="mt-12 pt-8 border-t border-white/5">
+        <h3 class="text-sm font-bold text-muted uppercase tracking-wider mb-4">Tags</h3>
+        <div class="flex flex-wrap gap-2">
+            {% for tag in article.get_tags_list %}
+            <span class="px-3 py-1 bg-white/5 text-text-main text-sm rounded-full border border-white/10">{{ tag }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="mt-12 pt-8 border-t border-white/5 flex justify-between items-center">
+        <a href="{% url 'content_list' %}" class="text-accent hover:text-white transition-colors flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Voltar para o conteúdo
+        </a>
+    </div>
+</article>
+{% endblock %}

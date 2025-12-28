@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  traefik:
+    image: traefik:v2.10
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.swarmMode=true"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - webnet
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+
+  web:
+    image: helkein-site:latest
+    volumes:
+      - media_data:/app/media
+    environment:
+      - DEBUG=False
+      - ALLOWED_HOSTS=dev.helkein.com.br,localhost,127.0.0.1
+      # Add other env vars from .env here if needed, or use env_file
+    networks:
+      - webnet
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.helkein.rule=Host(`dev.helkein.com.br`)"
+        - "traefik.http.routers.helkein.entrypoints=web"
+        - "traefik.http.services.helkein.loadbalancer.server.port=8000"
+
+volumes:
+  media_data:
+
+networks:
+  webnet:

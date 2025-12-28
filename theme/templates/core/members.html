@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <!-- Sidebar -->
+        <div class="md:col-span-1">
+            <div class="bg-surface border border-white/5 rounded-lg p-6 sticky top-24">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center text-white font-bold text-xl">
+                        {{ user.username|slice:":1"|upper }}
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-text-main">{{ user.username }}</h3>
+                        <p class="text-xs text-muted">Membro desde {{ user.date_joined|date:"Y" }}</p>
+                    </div>
+                </div>
+                
+                <nav class="space-y-2">
+                    <a href="#" class="block px-4 py-2 bg-white/5 text-accent rounded-md font-medium">Painel</a>
+                    <a href="#" class="block px-4 py-2 text-muted hover:text-text-main hover:bg-white/5 rounded-md transition-colors">Meus Cursos</a>
+                    <a href="#" class="block px-4 py-2 text-muted hover:text-text-main hover:bg-white/5 rounded-md transition-colors">Favoritos</a>
+                    <a href="#" class="block px-4 py-2 text-muted hover:text-text-main hover:bg-white/5 rounded-md transition-colors">Configurações</a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="md:col-span-3">
+            <h1 class="text-3xl font-bold text-text-main mb-8">Painel do Membro</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-surface border border-white/5 rounded-lg p-6">
+                    <h3 class="text-muted text-sm font-medium mb-2">Cursos em Andamento</h3>
+                    <p class="text-3xl font-bold text-text-main">0</p>
+                </div>
+                <div class="bg-surface border border-white/5 rounded-lg p-6">
+                    <h3 class="text-muted text-sm font-medium mb-2">Artigos Salvos</h3>
+                    <p class="text-3xl font-bold text-text-main">0</p>
+                </div>
+                <div class="bg-surface border border-white/5 rounded-lg p-6">
+                    <h3 class="text-muted text-sm font-medium mb-2">Certificados</h3>
+                    <p class="text-3xl font-bold text-text-main">0</p>
+                </div>
+            </div>
+
+            <h2 class="text-xl font-bold text-text-main mb-4">Continuar Estudando</h2>
+            <div class="bg-surface border border-white/5 rounded-lg p-8 text-center">
+                <p class="text-muted mb-4">Você ainda não iniciou nenhum curso.</p>
+                <a href="{% url 'content_list' %}#cursos" class="inline-block px-6 py-3 bg-accent text-white font-medium rounded-md hover:bg-accent-hover transition-colors">
+                    Explorar Cursos
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

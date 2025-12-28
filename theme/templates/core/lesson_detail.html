@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="flex flex-col lg:flex-row min-h-[calc(100vh-80px)]">
+    <!-- Main Content (Video Area) -->
+    <div class="flex-1 bg-black/20 p-4 md:p-6 lg:p-8 overflow-y-auto">
+        <div class="max-w-6xl mx-auto">
+            <div class="mb-6">
+                <a href="{% url 'course_detail' course.slug %}" class="text-muted hover:text-white transition-colors flex items-center gap-2 text-sm mb-4">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    Voltar para o curso
+                </a>
+                <h1 class="text-2xl md:text-3xl font-bold text-text-main mb-2">{{ lesson.title }}</h1>
+            </div>
+
+            {% if lesson.vimeo_video_id %}
+            <div class="relative bg-black rounded-xl overflow-hidden w-full shadow-2xl border border-white/10 mb-8" style="padding-bottom: 56.25%;">
+                <iframe src="https://player.vimeo.com/video/{{ lesson.vimeo_video_id }}" class="absolute top-0 left-0 w-full h-full" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            {% else %}
+            <div class="bg-surface border border-white/5 rounded-lg p-12 text-center mb-8">
+                <p class="text-muted">Este conteúdo não possui vídeo.</p>
+            </div>
+            {% endif %}
+
+            <!-- Description / Materials Tab Area -->
+            <div class="bg-surface border border-white/5 rounded-lg p-6">
+                <div class="flex items-center justify-between mb-4 border-b border-white/5 pb-4">
+                    <h3 class="text-lg font-bold text-text-main">Materiais e Descrição</h3>
+                </div>
+                
+                {% if lesson.materials %}
+                <div class="mb-6">
+                    <a href="{{ lesson.materials.url }}" download class="inline-flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-accent rounded-lg transition-colors text-sm font-bold">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        Baixar Material de Apoio
+                    </a>
+                </div>
+                {% endif %}
+                
+                <p class="text-muted">
+                    Aula {{ lesson.order }} do curso {{ course.title }}.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar (Playlist) -->
+    <div class="w-full lg:w-96 bg-surface border-l border-white/5 flex flex-col h-auto lg:h-[calc(100vh-80px)] sticky top-0">
+        <div class="p-6 border-b border-white/5 bg-surface z-10">
+            <h3 class="text-lg font-bold text-text-main">Conteúdo do Curso</h3>
+            <p class="text-xs text-muted mt-1">{{ course.lessons.count }} aulas</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto p-2 space-y-1">
+            {% for module in course.modules.all %}
+            <div class="mb-2">
+                <div class="px-4 py-2 text-sm font-bold text-muted uppercase tracking-wider bg-white/5 rounded mb-1">
+                    {{ module.title }}
+                </div>
+                <div class="space-y-1">
+                    {% for l in module.lessons.all %}
+                    <a href="{% url 'lesson_detail' course.slug l.id %}" class="flex items-start gap-3 p-3 rounded-lg transition-all {% if l.id == lesson.id %}bg-accent/10 border border-accent/20{% else %}hover:bg-white/5 border border-transparent{% endif %}">
+                        <div class="flex-shrink-0 mt-1">
+                            {% if l.id == lesson.id %}
+                            <div class="w-5 h-5 rounded-full bg-accent flex items-center justify-center">
+                                <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"></path></svg>
+                            </div>
+                            {% else %}
+                            <div class="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold text-muted">
+                                {{ l.order }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-sm font-medium {% if l.id == lesson.id %}text-accent{% else %}text-text-main{% endif %} line-clamp-2">{{ l.title }}</h4>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="text-xs text-muted">Vídeo</span>
+                                {% if l.duration %}
+                                <span class="text-xs text-muted">• {{ l.duration }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% empty %}
+            {# Fallback for courses without modules #}
+            {% for l in course.lessons.all %}
+            <a href="{% url 'lesson_detail' course.slug l.id %}" class="flex items-start gap-3 p-3 rounded-lg transition-all {% if l.id == lesson.id %}bg-accent/10 border border-accent/20{% else %}hover:bg-white/5 border border-transparent{% endif %}">
+                <div class="flex-shrink-0 mt-1">
+                    {% if l.id == lesson.id %}
+                    <div class="w-5 h-5 rounded-full bg-accent flex items-center justify-center">
+                        <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"></path></svg>
+                    </div>
+                    {% else %}
+                    <div class="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold text-muted">
+                        {{ l.order }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h4 class="text-sm font-medium {% if l.id == lesson.id %}text-accent{% else %}text-text-main{% endif %} line-clamp-2">{{ l.title }}</h4>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="text-xs text-muted">Vídeo</span>
+                        {% if l.duration %}
+                        <span class="text-xs text-muted">• {{ l.duration }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

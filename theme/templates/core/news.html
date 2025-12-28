@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold text-text-main mb-8">Notícias</h1>
+        
+        <div class="space-y-8">
+            <div class="bg-surface border border-white/5 rounded-lg p-8 hover:border-accent/50 transition-colors">
+                <span class="text-sm text-muted mb-2 block">15 de Outubro, 2023</span>
+                <h2 class="text-2xl font-bold text-text-main mb-4">Lançamento do Novo Curso de Filosofia Antiga</h2>
+                <p class="text-muted mb-6">Estamos felizes em anunciar nosso novo curso focado nos pré-socráticos e o nascimento da filosofia ocidental.</p>
+                <a href="#" class="text-accent hover:text-white transition-colors font-medium">Ler mais &rarr;</a>
+            </div>
+
+            <div class="bg-surface border border-white/5 rounded-lg p-8 hover:border-accent/50 transition-colors">
+                <span class="text-sm text-muted mb-2 block">01 de Outubro, 2023</span>
+                <h2 class="text-2xl font-bold text-text-main mb-4">Atualização da Plataforma</h2>
+                <p class="text-muted mb-6">Melhorias na área de membros e novos recursos de leitura offline já estão disponíveis.</p>
+                <a href="#" class="text-accent hover:text-white transition-colors font-medium">Ler mais &rarr;</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <section class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">Conteúdo</h1>
+        <p class="max-w-2xl mx-auto text-lg text-gray-600">
+            Navegue por nossas categorias de conteúdo filosófico.
+        </p>
+    </section>
+
+    <!-- Artigos Section -->
+    <section id="artigos" class="mb-16">
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">Artigos Científicos</h2>
+            <p class="text-gray-600">Pesquisas aprofundadas e análises baseadas em evidências sobre os mais diversos temas da ciência contemporânea.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for article in articles %}
+            <article class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100 flex flex-col">
+                {% if article.cover_image %}
+                <div class="h-40 bg-cover bg-center" style="background-image:url('{{ article.cover_image.url }}');"></div>
+                {% else %}
+                <div class="h-40 bg-gray-200 flex items-center justify-center text-gray-400">Sem imagem</div>
+                {% endif %}
+                <div class="p-4 flex-grow flex flex-col">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-lg font-bold text-gray-800 leading-tight hover:text-blue-600 transition-colors">
+                            <a href="#">{{ article.title }}</a>
+                        </h3>
+                    </div>
+                    <div class="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+                        <span>{{ article.authors.first.get_full_name|default:article.authors.first.username }}</span>
+                        <span class="px-2 py-1 bg-gray-100 rounded-full">{{ article.tags|default:"geral" }}</span>
+                    </div>
+                </div>
+            </article>
+            {% empty %}
+            <!-- Placeholder Content if no articles -->
+            <article class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100 flex flex-col">
+                <div class="h-40 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&h=340&fit=crop');"></div>
+                <div class="p-4 flex-grow flex flex-col">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-lg font-bold text-gray-800 leading-tight hover:text-blue-600 transition-colors">
+                            <a href="#">O Futuro da Computação Quântica</a>
+                        </h3>
+                    </div>
+                    <div class="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+                        <span>Dr. Carlos Silva</span>
+                        <span class="px-2 py-1 bg-blue-50 text-blue-600 rounded-full">física</span>
+                    </div>
+                </div>
+            </article>
+            
+            <article class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100 flex flex-col">
+                <div class="h-40 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=600&h=340&fit=crop');"></div>
+                <div class="p-4 flex-grow flex flex-col">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-lg font-bold text-gray-800 leading-tight hover:text-blue-600 transition-colors">
+                            <a href="#">Neuroplasticidade: O Cérebro em Constante Mudança</a>
+                        </h3>
+                    </div>
+                    <div class="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+                        <span>Dra. Ana Martins</span>
+                        <span class="px-2 py-1 bg-purple-50 text-purple-600 rounded-full">neurociência</span>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Ensaios Section -->
+    <section id="ensaios" class="mb-16">
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">Ensaios Filosóficos</h2>
+            <p class="text-gray-600">Reflexões críticas sobre ética, metafísica, epistemologia e filosofia da mente.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+             <!-- Placeholder Content -->
+             <article class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100 flex flex-col">
+                <div class="h-40 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&h=340&fit=crop');"></div>
+                <div class="p-4 flex-grow flex flex-col">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-lg font-bold text-gray-800 leading-tight hover:text-blue-600 transition-colors">
+                            <a href="#">A Ética na Era da Inteligência Artificial</a>
+                        </h3>
+                    </div>
+                    <div class="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+                        <span>Prof. Marcos Andrade</span>
+                        <span class="px-2 py-1 bg-yellow-50 text-yellow-600 rounded-full">ética</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+    
+    <!-- Cursos Section -->
+    <section id="cursos" class="mb-16">
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">Cursos</h2>
+            <p class="text-gray-600">Aprofunde seus conhecimentos com nossos cursos completos.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for course in courses %}
+            <article class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100 flex flex-col">
+                {% if course.cover_image %}
+                <div class="h-48 bg-cover bg-center" style="background-image:url('{{ course.cover_image.url }}');"></div>
+                {% else %}
+                <div class="h-48 bg-gray-200 flex items-center justify-center text-gray-400">Sem imagem</div>
+                {% endif %}
+                <div class="p-6 flex-grow flex flex-col">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2 leading-tight hover:text-blue-600 transition-colors">
+                        <a href="#">{{ course.title }}</a>
+                    </h3>
+                    <p class="text-gray-600 mb-4 line-clamp-3">{{ course.description }}</p>
+                    <div class="mt-auto">
+                        <a href="#" class="text-blue-600 font-medium hover:underline">Ver curso &rarr;</a>
+                    </div>
+                </div>
+            </article>
+            {% empty %}
+            <p class="text-gray-500 col-span-3">Nenhum curso disponível no momento.</p>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

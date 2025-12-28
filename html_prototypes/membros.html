@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Área do Membro - Helkein</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="description" content="Acesse sua conta ou crie uma nova para aproveitar todos os benefícios do Helkein.">
+</head>
+<body>
+    <header class="header">
+        <div class="container nav">
+            <a href="index.html" class="logo"><img src="logo.png" alt="Helkein logo"><span class="visually-hidden">Helkein</span></a>
+            <span class="tagline">Filosofia simples, não simplificada</span>
+            <nav>
+                <a href="index.html">Início</a>
+                <a href="conteudo.html">Conteúdo</a>
+                <a href="novidades.html">Notícias</a>
+                <a href="sobre.html">Sobre</a>
+                <a href="contato.html">Contato</a>
+            </nav>
+            <div class="nav-actions">
+                <a class="btn ghost" href="membros.html">Entrar</a>
+                <a class="btn primary" href="associe-se.html">Associe-se</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Área do Membro</h1>
+        <p>Acesse sua conta ou crie uma nova para aproveitar todos os benefícios exclusivos.</p>
+
+        <div class="auth-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+            
+            <!-- Login Section -->
+            <section class="auth-section" style="padding: 2rem; background: var(--glass); border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.05);">
+                <h2 style="color: var(--accent); margin-bottom: 1.5rem;">Entrar</h2>
+                <p style="color: var(--muted); margin-bottom: 1.5rem;">Já é membro? Faça login para acessar conteúdos exclusivos.</p>
+                
+                <form class="contact-form" action="#" method="post" style="margin: 0;">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input id="login-email" name="email" type="email" placeholder="seu@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="login-password">Senha</label>
+                        <input id="login-password" name="password" type="password" placeholder="Sua senha" required>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--muted); font-size: var(--fs-sm); cursor: pointer;">
+                            <input type="checkbox" name="remember" style="width: auto; margin: 0;">
+                            Lembrar-me
+                        </label>
+                        <a href="#" style="color: var(--accent); font-size: var(--fs-sm);">Esqueci minha senha</a>
+                    </div>
+
+                    <div class="form-actions" style="margin-top: 1rem;">
+                        <button class="btn primary" type="submit" style="width: 100%;">Entrar</button>
+                    </div>
+                </form>
+
+                <div style="margin-top: 1.5rem; text-align: center;">
+                    <p style="color: var(--muted); font-size: var(--fs-sm);">Ou entre com:</p>
+                    <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1rem;">
+                        <button class="btn ghost" style="flex: 1;">Google</button>
+                        <button class="btn ghost" style="flex: 1;">GitHub</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Register Section -->
+            <section class="auth-section" style="padding: 2rem; background: var(--glass); border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.05);">
+                <h2 style="color: var(--accent); margin-bottom: 1.5rem;">Criar Conta</h2>
+                <p style="color: var(--muted); margin-bottom: 1.5rem;">Novo por aqui? Crie sua conta gratuita.</p>
+                
+                <form class="contact-form" action="#" method="post" style="margin: 0;">
+                    <div class="form-group">
+                        <label for="register-name">Nome Completo</label>
+                        <input id="register-name" name="name" type="text" placeholder="Seu nome completo" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input id="register-email" name="email" type="email" placeholder="seu@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register-password">Senha</label>
+                        <input id="register-password" name="password" type="password" placeholder="Mínimo 8 caracteres" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register-confirm">Confirmar Senha</label>
+                        <input id="register-confirm" name="confirm-password" type="password" placeholder="Confirme sua senha" required>
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: flex; align-items: flex-start; gap: 0.5rem; color: var(--muted); font-size: var(--fs-sm); cursor: pointer;">
+                            <input type="checkbox" name="terms" required style="width: auto; margin: 0; margin-top: 3px;">
+                            <span>Li e aceito os <a href="#" style="color: var(--accent);">Termos de Uso</a> e a <a href="#" style="color: var(--accent);">Política de Privacidade</a></span>
+                        </label>
+                    </div>
+
+                    <div class="form-actions" style="margin-top: 1rem;">
+                        <button class="btn primary" type="submit" style="width: 100%;">Criar Conta Gratuita</button>
+                    </div>
+                </form>
+
+                <div style="margin-top: 1.5rem; text-align: center;">
+                    <p style="color: var(--muted); font-size: var(--fs-sm);">
+                        Quer acesso a conteúdos premium?<br>
+                        <a href="associe-se.html" style="color: var(--accent);">Conheça nossos planos de assinatura</a>
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Benefícios de ser membro -->
+        <section style="margin-top:3rem;">
+            <h2>Benefícios de Ser Membro</h2>
+            <div class="grid" style="margin-top:1rem;">
+                <div class="card" style="cursor: default;">
+                    <div class="info" style="padding: 1.5rem; flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+                        <h3 class="title">📖 Salvar Artigos</h3>
+                        <p class="meta" style="line-height: 1.6;">Crie sua biblioteca pessoal salvando artigos para ler depois.</p>
+                    </div>
+                </div>
+
+                <div class="card" style="cursor: default;">
+                    <div class="info" style="padding: 1.5rem; flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+                        <h3 class="title">💬 Comentários</h3>
+                        <p class="meta" style="line-height: 1.6;">Participe de discussões e compartilhe suas reflexões.</p>
+                    </div>
+                </div>
+
+                <div class="card" style="cursor: default;">
+                    <div class="info" style="padding: 1.5rem; flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+                        <h3 class="title">📧 Newsletter</h3>
+                        <p class="meta" style="line-height: 1.6;">Receba semanalmente os melhores conteúdos no seu email.</p>
+                    </div>
+                </div>
+
+                <div class="card" style="cursor: default;">
+                    <div class="info" style="padding: 1.5rem; flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+                        <h3 class="title">🎯 Recomendações</h3>
+                        <p class="meta" style="line-height: 1.6;">Conteúdo personalizado baseado em seus interesses.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA para plano premium -->
+        <section class="cta-section" style="margin-top:3rem; text-align:center; padding: 2rem; background: var(--glass); border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.05);">
+            <h2 style="color: var(--text);">Quer Mais?</h2>
+            <p style="color: var(--muted); max-width: 600px; margin: 1rem auto;">Membros premium têm acesso a conteúdos exclusivos, webinars, cursos e muito mais. Conheça nossos planos.</p>
+            <a class="btn primary" href="associe-se.html" style="margin-top: 1rem;">Ver Planos Premium</a>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer content">
+            <div class="col">
+                <h4>Conteúdo</h4>
+                <a href="conteudo.html#artigos">Artigos</a>
+                <a href="conteudo.html#ensaios">Ensaios</a>
+                <a href="conteudo.html#resenhas">Resenhas</a>
+                <a href="conteudo.html#multimidia">Multimídia</a>
+            </div>
+            <div class="col">
+                <h4>Institucional</h4>
+                <a href="sobre.html">Sobre Nós</a>
+                <a href="novidades.html">Notícias</a>
+                <a href="contato.html">Contato</a>
+            </div>
+            <div class="col">
+                <h4>Membros</h4>
+                <a href="membros.html">Entrar</a>
+                <a href="associe-se.html">Associe-se</a>
+                <a href="#beneficios">Benefícios</a>
+            </div>
+            <div class="col">
+                <h4>Redes Sociais</h4>
+                <div class="social">
+                    <a href="#" title="Twitter" aria-label="Twitter">𝕏</a>
+                    <a href="#" title="YouTube" aria-label="YouTube">▶</a>
+                    <a href="#" title="LinkedIn" aria-label="LinkedIn">in</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer bottom">
+            <p>© 2025 Helkein — Divulgação Científica e Filosófica. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>

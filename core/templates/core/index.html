@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="relative bg-gray-900 text-white rounded-xl overflow-hidden mb-12">
+    <div class="absolute inset-0 bg-cover bg-center opacity-50" style="background-image: url('https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=1200&h=600&fit=crop');"></div>
+    <div class="relative container mx-auto px-6 py-24 md:py-32">
+        <div class="max-w-2xl">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">Filosofia para Todos</h1>
+            <p class="text-xl md:text-2xl text-gray-200 mb-8">Explore ensaios filosóficos, artigos, resenhas críticas e conteúdo multimídia. Uma plataforma dedicada a apresentar a filosofia de forma acessível e profunda.</p>
+            <a href="{% url 'content_list' %}" class="inline-block px-8 py-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors shadow-lg">Começar a Explorar</a>
+        </div>
+    </div>
+</section>
+
+<section class="mb-16">
+    <h2 class="text-3xl font-bold text-gray-800 mb-8 border-l-4 border-blue-600 pl-4">Explore Nosso Conteúdo</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <a href="{% url 'content_list' %}#artigos" class="group block bg-white rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden border border-gray-100">
+            <div class="h-40 bg-cover bg-center group-hover:scale-105 transition-transform duration-300" style="background-image:url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=600&h=340&fit=crop');"></div>
+            <div class="p-4">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors">Artigos</h3>
+                    <span class="px-2 py-1 text-xs font-bold text-blue-600 bg-blue-50 rounded-full">novo</span>
+                </div>
+                <p class="text-sm text-gray-500">Pesquisas e análises aprofundadas</p>
+            </div>
+        </a>
+
+        <a href="{% url 'content_list' %}#ensaios" class="group block bg-white rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden border border-gray-100">
+            <div class="h-40 bg-cover bg-center group-hover:scale-105 transition-transform duration-300" style="background-image:url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&h=340&fit=crop');"></div>
+            <div class="p-4">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors">Ensaios</h3>
+                    <span class="px-2 py-1 text-xs font-bold text-purple-600 bg-purple-50 rounded-full">destaque</span>
+                </div>
+                <p class="text-sm text-gray-500">Reflexões filosóficas e críticas</p>
+            </div>
+        </a>
+
+        <a href="{% url 'content_list' %}#resenhas" class="group block bg-white rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden border border-gray-100">
+            <div class="h-40 bg-cover bg-center group-hover:scale-105 transition-transform duration-300" style="background-image:url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&h=340&fit=crop');"></div>
+            <div class="p-4">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors">Resenhas</h3>
+                    <span class="px-2 py-1 text-xs font-bold text-green-600 bg-green-50 rounded-full">popular</span>
+                </div>
+                <p class="text-sm text-gray-500">Análises de obras e publicações</p>
+            </div>
+        </a>
+
+        <a href="{% url 'content_list' %}#multimidia" class="group block bg-white rounded-lg shadow-sm hover:shadow-md transition-all overflow-hidden border border-gray-100">
+            <div class="h-40 bg-cover bg-center group-hover:scale-105 transition-transform duration-300" style="background-image:url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&h=340&fit=crop');"></div>
+            <div class="p-4">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors">Multimídia</h3>
+                    <span class="px-2 py-1 text-xs font-bold text-orange-600 bg-orange-50 rounded-full">interativo</span>
+                </div>
+                <p class="text-sm text-gray-500">Vídeos, podcasts e infográficos</p>
+            </div>
+        </a>
+    </div>
+</section>
+
+<section class="mb-16">
+    <h2 class="text-3xl font-bold text-gray-800 mb-8 border-l-4 border-blue-600 pl-4">Destaques da Semana</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Example Article Card -->
+        <article class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100 flex flex-col">
+            <div class="h-48 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&h=340&fit=crop');"></div>
+            <div class="p-6 flex-grow flex flex-col">
+                <div class="flex items-center gap-2 mb-3 text-xs font-bold uppercase tracking-wider text-gray-500">
+                    <span class="text-blue-600">Ensaio</span>
+                    <span>•</span>
+                    <span>15 min de leitura</span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-3 leading-tight hover:text-blue-600 transition-colors">
+                    <a href="#">A Ética na Inteligência Artificial</a>
+                </h3>
+                <p class="text-gray-600 mb-4 line-clamp-3 flex-grow">
+                    Uma análise sobre os desafios morais e as implicações sociais do desenvolvimento acelerado de sistemas autônomos.
+                </p>
+                <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-gray-200"></div>
+                        <span class="text-sm font-medium text-gray-700">Ana Silva</span>
+                    </div>
+                    <span class="text-xs text-gray-400">25 Dez 2025</span>
+                </div>
+            </div>
+        </article>
+        
+        <!-- More cards would go here -->
+    </div>
+</section>
+{% endblock %}

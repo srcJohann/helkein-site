@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <section class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">Associe-se ao Helkein</h1>
+        <p class="max-w-2xl mx-auto text-lg text-gray-600">
+            Faça parte de uma comunidade dedicada ao conhecimento. Escolha o plano ideal para você e tenha acesso a conteúdos exclusivos, eventos e recursos especiais.
+        </p>
+    </section>
+
+    <!-- Planos de Assinatura -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        
+        <!-- Plano Gratuito -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
+            <div class="p-8 flex flex-col items-center text-center flex-grow">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Gratuito</h3>
+                <div class="text-4xl font-bold text-gray-900 mb-2">
+                    R$ 0
+                    <span class="text-base font-normal text-gray-500">/mês</span>
+                </div>
+                <p class="text-gray-600 mb-6">Acesso básico ao conteúdo do Helkein.</p>
+                
+                <ul class="w-full space-y-3 text-left mb-8">
+                    <li class="flex items-center text-gray-600">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Artigos selecionados
+                    </li>
+                    <li class="flex items-center text-gray-600">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Newsletter semanal
+                    </li>
+                    <li class="flex items-center text-gray-600">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Comentários
+                    </li>
+                    <li class="flex items-center text-gray-400">
+                        <svg class="w-5 h-5 text-gray-300 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        Conteúdo premium
+                    </li>
+                    <li class="flex items-center text-gray-400">
+                        <svg class="w-5 h-5 text-gray-300 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        Webinars exclusivos
+                    </li>
+                    <li class="flex items-center text-gray-400">
+                        <svg class="w-5 h-5 text-gray-300 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        Cursos online
+                    </li>
+                </ul>
+                
+                <a href="{% url 'login' %}" class="w-full block py-3 px-4 bg-gray-100 text-gray-700 font-bold rounded-lg hover:bg-gray-200 transition-colors mt-auto">Criar Conta Gratuita</a>
+            </div>
+        </div>
+
+        <!-- Plano Premium (Destaque) -->
+        <div class="bg-white rounded-xl shadow-lg border-2 border-blue-600 overflow-hidden flex flex-col transform md:-translate-y-4 relative">
+            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-b-lg uppercase tracking-wide">Mais Popular</div>
+            <div class="p-8 flex flex-col items-center text-center flex-grow pt-10">
+                <h3 class="text-2xl font-bold text-blue-600 mb-4">Premium</h3>
+                <div class="text-4xl font-bold text-gray-900 mb-2">
+                    R$ 29
+                    <span class="text-base font-normal text-gray-500">/mês</span>
+                </div>
+                <p class="text-gray-600 mb-6">Acesso completo a todo o conteúdo.</p>
+                
+                <ul class="w-full space-y-3 text-left mb-8">
+                    <li class="flex items-center text-gray-600">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Todo conteúdo gratuito
+                    </li>
+                    <li class="flex items-center text-gray-600">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Artigos premium
+                    </li>
+                    <li class="flex items-center text-gray-600">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Webinars mensais
+                    </li>
+                    <li class="flex items-center text-gray-600">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Podcasts exclusivos
+                    </li>
+                    <li class="flex items-center text-gray-600">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Fórum de discussão
+                    </li>
+                    <li class="flex items-center text-gray-400">
+                        <svg class="w-5 h-5 text-gray-300 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        Cursos completos
+                    </li>
+                </ul>
+                
+                <a href="#" class="w-full block py-3 px-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors mt-auto shadow-md">Assinar Premium</a>
+            </div>
+        </div>
+
+        <!-- Plano Institucional -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
+            <div class="p-8 flex flex-col items-center text-center flex-grow">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Institucional</h3>
+                <div class="text-4xl font-bold text-gray-900 mb-2">
+                    R$ 99
+                    <span class="text-base font-normal text-gray-500">/mês</span>
+                </div>
+                <p class="text-gray-600 mb-6">Para instituições e grupos de estudo.</p>
+                
+                <ul class="w-full space-y-3 text-left mb-8">
+                    <li class="flex items-center text-gray-600">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Tudo do Premium
+                    </li>
+                    <li class="flex items-center text-gray-600">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Até 10 membros
+                    </li>
+                    <li class="flex items-center text-gray-600">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Gestão de equipe
+                    </li>
+                    <li class="flex items-center text-gray-600">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Suporte prioritário
+                    </li>
+                    <li class="flex items-center text-gray-600">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Faturamento empresarial
+                    </li>
+                </ul>
+                
+                <a href="#" class="w-full block py-3 px-4 bg-gray-100 text-gray-700 font-bold rounded-lg hover:bg-gray-200 transition-colors mt-auto">Contatar Vendas</a>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
