@@ -1,58 +1,39 @@
-version: '3.8'
+version: '3.9'
 
 services:
-  traefik:
-    image: traefik:v2.10
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.swarmMode=true"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.email=postmaster@helkein.com.br"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-    ports:
-      - "80:80"
-      - "8080:8080"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - traefik-certificates:/letsencrypt
-    networks:
-      - webnet
-    deploy:
-      placement:
-        constraints:
-          - node.role == manager
-
   web:
     image: helkein-site:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
       - media_data:/app/media
     environment:
       - DEBUG=False
       - ALLOWED_HOSTS=dev.helkein.com.br,localhost,127.0.0.1
-      # Add other env vars from .env here if needed, or use env_file
     networks:
-      - webnet
+      - network_public
     deploy:
+      mode: replicated
       replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
       labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.helkein.rule=Host(`dev.helkein.com.br`)"
-        - "traefik.http.routers.helkein.entrypoints=websecure"
-        - "traefik.http.routers.helkein.tls.certresolver=myresolver"
-        - "traefik.http.services.helkein.loadbalancer.server.port=8000"
-        # Redirect HTTP to HTTPS
-        - "traefik.http.routers.helkein-http.rule=Host(`dev.helkein.com.br`)"
-        - "traefik.http.routers.helkein-http.entrypoints=web"
-        - "traefik.http.routers.helkein-http.middlewares=https-redirect"
-        - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+        traefik.enable: "true"
+        traefik.http.routers.helkein.rule: "Host(`dev.helkein.com.br`)"
+        traefik.http.routers.helkein.entrypoints: "websecure"
+        traefik.http.routers.helkein.tls.certresolver: "letsencryptresolver"
+        traefik.http.services.helkein.loadbalancer.server.port: "8000"
+        traefik.http.routers.helkein.service: "helkein"
 
 volumes:
   media_data:
-  traefik-certificates:
 
 networks:
-  webnet:
+  network_public:
+    external: true
