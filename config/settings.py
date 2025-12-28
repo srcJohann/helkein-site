@@ -33,7 +33,7 @@ DEBUG = True
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://dev.helkein.com',
+    'https://helkein.srcjohann.com.br',
     'https://*.ngrok-free.app',
     'https://*.ngrok.io',
     'http://127.0.0.1',

@@ -10,7 +10,7 @@ services:
       - media_data:/app/media
     environment:
       - DEBUG=False
-      - ALLOWED_HOSTS=dev.helkein.com,localhost,127.0.0.1
+      - ALLOWED_HOSTS=helkein.srcjohann.com.br,localhost,127.0.0.1
     networks:
       - network_public
     deploy:
@@ -25,7 +25,7 @@ services:
         max_attempts: 3
       labels:
         traefik.enable: "true"
-        traefik.http.routers.helkein.rule: "Host(`dev.helkein.com`)"
+        traefik.http.routers.helkein.rule: "Host(`helkein.srcjohann.com.br`)"
         traefik.http.routers.helkein.entrypoints: "websecure"
         traefik.http.routers.helkein.tls.certresolver: "letsencryptresolver"
         traefik.http.services.helkein.loadbalancer.server.port: "8000"
