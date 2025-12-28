@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t helkein-site:latest .
+docker build --no-cache -t helkein-site:latest .
