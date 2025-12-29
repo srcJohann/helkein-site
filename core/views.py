@@ -7,6 +7,11 @@ from .models import Article, Course, Lesson, Plan
 def check_plan_access(user, required_plan):
     if not required_plan:
         return True
+    
+    # Allow access if the plan level is 0 (Free/Public)
+    if required_plan.level == 0:
+        return True
+        
     if not user.is_authenticated:
         return False
     if not hasattr(user, 'profile') or not user.profile.current_plan:
@@ -19,16 +24,22 @@ def home(request):
 
 def content_list(request):
     category = request.GET.get('category')
+    query = request.GET.get('q')
     articles = Article.objects.filter(status='published')
+    courses = Course.objects.filter(status='published')
     
     if category:
         articles = articles.filter(category=category)
+    
+    if query:
+        articles = articles.filter(title__icontains=query) | articles.filter(summary__icontains=query) | articles.filter(content__icontains=query)
+        courses = courses.filter(title__icontains=query)
         
-    courses = Course.objects.filter(status='published')
     return render(request, 'core/content_list.html', {
-        'articles': articles, 
-        'courses': courses,
-        'current_category': category
+        'articles': articles.distinct(), 
+        'courses': courses.distinct(),
+        'current_category': category,
+        'query': query
     })
 
 def article_detail(request, slug):
@@ -36,7 +47,7 @@ def article_detail(request, slug):
     
     if not check_plan_access(request.user, article.required_plan):
         if not request.user.is_authenticated:
-            return redirect('login') # Or whatever your login url name is
+            return redirect('account_login')
         messages.warning(request, 'Este conteúdo requer um plano superior.')
         return redirect('subscribe')
         

@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from .storage import EncryptedFileSystemStorage
+from ckeditor_uploader.fields import RichTextUploadingField
 
 class Plan(models.Model):
     name = models.CharField(max_length=50)
@@ -45,15 +46,15 @@ class Article(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='artigo')
     summary = models.TextField()
-    content = models.TextField(blank=True, default='')
+    content = RichTextUploadingField(blank=True, default='')
     tags = models.CharField(max_length=200, help_text="Comma separated tags")
     authors = models.ManyToManyField(User, related_name='articles')
-    pdf_file = models.FileField(
-        upload_to='articles/pdfs/', 
-        blank=True, 
-        null=True,
-        storage=EncryptedFileSystemStorage()
-    )
+    # pdf_file = models.FileField(
+    #     upload_to='articles/pdfs/', 
+    #     blank=True, 
+    #     null=True,
+    #     storage=EncryptedFileSystemStorage()
+    # )
     cover_image = models.ImageField(upload_to='articles/covers/', blank=True, null=True)
     video_url = models.URLField(blank=True, null=True, help_text="URL do vídeo para conteúdo multimídia")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')

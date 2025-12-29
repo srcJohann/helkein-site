@@ -1,6 +1,47 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<!-- MathJax for LaTeX rendering -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+    /* Fix for anchor jumping behind sticky header */
+    html {
+        scroll-behavior: smooth;
+    }
+    :target {
+        scroll-margin-top: 100px; /* Adjust based on header height */
+    }
+    /* Footnote styling */
+    sup a {
+        color: #C9B37E; /* Accent color */
+        text-decoration: none;
+        margin-left: 2px;
+    }
+    sup a:hover {
+        text-decoration: underline;
+    }
+
+    /* Manual Prose Styling for Headings (Fix for missing Typography plugin) */
+    .prose h1 { font-size: 2.25rem; line-height: 2.5rem; font-weight: 700; margin-top: 0; margin-bottom: 0.8888889em; color: #EAE0C8; }
+    .prose h2 { font-size: 1.5rem; line-height: 2rem; font-weight: 700; margin-top: 2em; margin-bottom: 1em; color: #EAE0C8; }
+    .prose h3 { font-size: 1.25rem; line-height: 1.75rem; font-weight: 600; margin-top: 1.6em; margin-bottom: 0.6em; color: #EAE0C8; }
+    .prose h4 { font-weight: 600; margin-top: 1.5em; margin-bottom: 0.5em; color: #EAE0C8; }
+    .prose p { margin-top: 1.25em; margin-bottom: 1.25em; }
+    .prose strong { font-weight: 600; color: #EAE0C8; }
+    .prose ul { list-style-type: disc; padding-left: 1.625em; margin-top: 1.25em; margin-bottom: 1.25em; }
+    .prose ol { list-style-type: decimal; padding-left: 1.625em; margin-top: 1.25em; margin-bottom: 1.25em; }
+    .prose blockquote { font-weight: 500; font-style: italic; color: #C9B37E; border-left-width: 0.25rem; border-left-color: #C9B37E; margin-top: 1.6em; margin-bottom: 1.6em; padding-left: 1em; }
+</style>
+
 <article class="container mx-auto px-4 py-12 max-w-4xl">
     <header class="mb-12 text-center">
         <div class="flex items-center justify-center gap-2 mb-4">
@@ -31,90 +72,19 @@
         </div>
         {% endif %}
 
-        {{ article.content|linebreaks }}
+        {{ article.content|safe }}
     </div>
 
     {% if article.pdf_file %}
-    <div class="mt-12">
-        <h3 class="text-2xl font-bold text-text-main mb-6">Documento PDF</h3>
-        <div class="bg-surface border border-white/5 rounded-lg p-4">
-            <div class="flex items-center justify-between mb-4">
-                <span class="text-muted text-sm">Visualização do documento</span>
+    <div class="mt-12 p-6 bg-bg rounded-lg border border-white/10 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <svg class="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+            <div>
+                <h3 class="font-bold text-text-main">Versão em PDF</h3>
+                <p class="text-sm text-muted">Baixe o conteúdo para ler offline</p>
             </div>
-            
-            <!-- Custom PDF Viewer Container -->
-            <div id="pdf-viewer-container" class="w-full h-[800px] overflow-y-auto bg-gray-900 rounded-md border border-white/10 p-4 flex flex-col items-center gap-4 relative">
-                <div id="pdf-loading" class="absolute inset-0 flex items-center justify-center text-white z-10 bg-gray-900/80">
-                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-                    <span class="ml-2">Carregando documento...</span>
-                </div>
-            </div>
-
-            <!-- PDF.js Scripts -->
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-            <script>
-                (function() {
-                    const initPDFViewer = async () => {
-                        if (typeof pdfjsLib === 'undefined') {
-                            setTimeout(initPDFViewer, 100);
-                            return;
-                        }
-
-                        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-                        const url = "{% url 'serve_protected_pdf' article.slug %}";
-                        const container = document.getElementById('pdf-viewer-container');
-                        const loadingIndicator = document.getElementById('pdf-loading');
-
-                        if (!container) return;
-
-                        // Disable context menu
-                        container.addEventListener('contextmenu', event => event.preventDefault());
-
-                        try {
-                            const loadingTask = pdfjsLib.getDocument(url);
-                            const pdf = await loadingTask.promise;
-                            
-                            loadingIndicator.style.display = 'none';
-
-                            for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-                                const page = await pdf.getPage(pageNum);
-                                
-                                // Calculate scale to fit container width
-                                const containerWidth = container.clientWidth - 48; // padding adjustment
-                                const unscaledViewport = page.getViewport({ scale: 1 });
-                                const scale = Math.min(1.5, containerWidth / unscaledViewport.width); // Max scale 1.5
-                                const viewport = page.getViewport({ scale });
-
-                                const canvas = document.createElement('canvas');
-                                const context = canvas.getContext('2d');
-                                canvas.height = viewport.height;
-                                canvas.width = viewport.width;
-                                canvas.className = "shadow-lg mb-4 bg-white max-w-full";
-
-                                // Disable context menu on canvas
-                                canvas.addEventListener('contextmenu', event => event.preventDefault());
-
-                                container.appendChild(canvas);
-
-                                const renderContext = {
-                                    canvasContext: context,
-                                    viewport: viewport
-                                };
-                                await page.render(renderContext).promise;
-                            }
-                        } catch (error) {
-                            console.error('Error loading PDF:', error);
-                            if (loadingIndicator) {
-                                loadingIndicator.innerHTML = '<span class="text-red-400">Erro ao carregar o documento.</span>';
-                            }
-                        }
-                    };
-
-                    initPDFViewer();
-                })();
-            </script>
         </div>
+        <a href="{{ article.pdf_file.url }}" target="_blank" class="px-4 py-2 bg-accent text-white rounded hover:bg-accent-hover transition-colors text-sm font-medium">Download PDF</a>
     </div>
     {% endif %}
 

@@ -5,16 +5,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Helkein{% endblock %}</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     {% tailwind_css %}
 </head>
 <body class="bg-bg font-sans text-text-main flex flex-col min-h-screen">
-    <header class="bg-surface shadow-sm sticky top-0 z-50 border-b border-white/5">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <a href="{% url 'home' %}" class="flex items-center gap-2">
-                    <img src="{% static 'img/logo.png' %}" alt="Helkein" class="h-12 w-auto drop-shadow-[0_0_8px_rgba(201,179,126,0.5)]">
+    <header class="bg-surface shadow-sm sticky top-0 z-50 border-b border-white/5" x-data="{ mobileMenuOpen: false }">
+        <div class="container mx-auto px-2 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <!-- Mobile Menu Button -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-text-main hover:text-accent focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+
+                <a href="{% url 'home' %}" class="hidden md:flex items-center gap-2">
+                    <img src="{% static 'img/logo.png' %}" alt="Helkein" class="h-8 w-auto drop-shadow-[0_0_8px_rgba(201,179,126,0.5)]">
                 </a>
-                <span class="hidden lg:inline-block text-sm text-muted border-l border-white/10 pl-4 ml-4">Filosofia simples, não simplificada</span>
+                
+                <!-- Search Bar -->
+                <form action="{% url 'content_list' %}" method="get" class="hidden lg:flex items-center ml-2">
+                    <div class="relative">
+                        <input type="text" name="q" placeholder="Pesquisar..." value="{{ request.GET.q|default:'' }}" class="bg-bg border border-white/10 rounded-full py-1.5 px-4 pl-10 text-sm text-text-main placeholder-muted focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent w-64 transition-all">
+                        <svg class="w-4 h-4 text-muted absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                </form>
             </div>
             
             <nav class="hidden md:flex space-x-6 items-center">
@@ -46,13 +61,64 @@
             <div class="flex items-center space-x-4">
                 {% if user.is_authenticated %}
                     <a href="{% url 'members' %}" class="text-sm font-medium hover:text-accent transition-colors uppercase">Minha Conta</a>
-                    <form action="{% url 'logout' %}" method="post" class="inline">
+                    <form action="{% url 'account_logout' %}" method="post" class="inline">
                         {% csrf_token %}
                         <button type="submit" class="px-4 py-2 text-sm font-medium bg-accent text-white rounded-md hover:bg-accent-hover transition-colors uppercase">Sair</button>
                     </form>
                 {% else %}
-                    <a href="{% url 'login' %}" class="text-sm font-medium hover:text-accent transition-colors uppercase">Entrar</a>
+                    <a href="{% url 'account_login' %}" class="text-sm font-medium hover:text-accent transition-colors uppercase">Entrar</a>
                     <a href="{% url 'subscribe' %}" class="px-4 py-2 text-sm font-medium bg-accent text-white rounded-md hover:bg-accent-hover transition-colors shadow-sm shadow-accent/30 uppercase">Associe-se</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div x-show="mobileMenuOpen" 
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 -translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 -translate-y-2"
+             @click.away="mobileMenuOpen = false"
+             class="absolute top-full left-0 w-full bg-surface border-b border-white/10 shadow-xl md:hidden py-4 px-4 flex flex-col gap-4 max-h-[80vh] overflow-y-auto">
+            
+            <form action="{% url 'content_list' %}" method="get" class="relative">
+                <input type="text" name="q" placeholder="Pesquisar..." value="{{ request.GET.q|default:'' }}" class="w-full bg-bg border border-white/10 rounded-md py-2 px-4 pl-10 text-sm text-text-main focus:outline-none focus:border-accent">
+                <svg class="w-4 h-4 text-muted absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </form>
+
+            <a href="{% url 'home' %}" class="text-text-main hover:text-accent uppercase font-medium">Início</a>
+            
+            <div x-data="{ open: false }">
+                <button @click="open = !open" class="flex items-center justify-between w-full text-text-main hover:text-accent uppercase font-medium">
+                    Conteúdos
+                    <svg class="w-4 h-4 transform transition-transform" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div x-show="open" class="pl-4 mt-2 space-y-2 border-l border-white/10 ml-1">
+                    <a href="{% url 'content_list' %}?category=artigo" class="block text-sm text-muted hover:text-text-main">Artigos</a>
+                    <a href="{% url 'content_list' %}?category=ensaio" class="block text-sm text-muted hover:text-text-main">Ensaios</a>
+                    <a href="{% url 'content_list' %}?category=resenha" class="block text-sm text-muted hover:text-text-main">Resenhas</a>
+                    <a href="{% url 'content_list' %}?category=recomendacao" class="block text-sm text-muted hover:text-text-main">Recomendações</a>
+                    <a href="{% url 'content_list' %}?category=multimidia" class="block text-sm text-muted hover:text-text-main">Multimídia</a>
+                </div>
+            </div>
+
+            <a href="{% url 'content_list' %}#cursos" class="text-text-main hover:text-accent uppercase font-medium">Cursos</a>
+            <a href="{% url 'news' %}" class="text-text-main hover:text-accent uppercase font-medium">Notícias</a>
+            <a href="{% url 'about' %}" class="text-text-main hover:text-accent uppercase font-medium">Sobre Nós</a>
+            <a href="#" class="text-text-main hover:text-accent uppercase font-medium">Loja</a>
+            
+            <div class="pt-4 border-t border-white/10 flex flex-col gap-3">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'members' %}" class="text-center w-full py-2 border border-white/10 rounded hover:bg-white/5 transition-colors uppercase text-sm">Minha Conta</a>
+                    <form action="{% url 'account_logout' %}" method="post" class="w-full">
+                        {% csrf_token %}
+                        <button type="submit" class="w-full py-2 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded transition-colors uppercase text-sm">Sair</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'account_login' %}" class="text-center w-full py-2 border border-white/10 rounded hover:bg-white/5 transition-colors uppercase text-sm">Entrar</a>
+                    <a href="{% url 'subscribe' %}" class="text-center w-full py-2 bg-accent text-white rounded hover:bg-accent-hover transition-colors uppercase text-sm">Associe-se</a>
                 {% endif %}
             </div>
         </div>

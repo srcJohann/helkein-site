@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ article.title }} - Helkein{% endblock %}
+
+{% block content %}
+<!-- MathJax for LaTeX rendering -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+    /* Fix for anchor jumping behind sticky header */
+    html {
+        scroll-behavior: smooth;
+    }
+    :target {
+        scroll-margin-top: 100px; /* Adjust based on header height */
+    }
+    /* Footnote styling */
+    sup a {
+        color: #C9B37E; /* Accent color */
+        text-decoration: none;
+        margin-left: 2px;
+    }
+    sup a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="container mx-auto px-4 py-12">
+    <article class="max-w-4xl mx-auto bg-surface border border-white/10 rounded-lg overflow-hidden shadow-xl">
+        {% if article.cover_image %}
+        <div class="w-full h-64 md:h-96 relative">
+            <img src="{{ article.cover_image.url }}" alt="{{ article.title }}" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent"></div>
+        </div>
+        {% endif %}
+
+        <div class="p-8 md:p-12">
+            <div class="flex items-center gap-4 mb-6 text-sm text-muted">
+                <span class="uppercase tracking-wider text-accent">{{ article.get_category_display }}</span>
+                <span>&bull;</span>
+                <span>{{ article.created_at|date:"d \d\e F \d\e Y" }}</span>
+                {% if article.required_plan %}
+                <span>&bull;</span>
+                <span class="px-2 py-1 bg-white/5 rounded text-xs border border-white/10">
+                    {{ article.required_plan.name }}
+                </span>
+                {% endif %}
+            </div>
+
+            <h1 class="text-3xl md:text-4xl font-bold mb-6 text-text-main">{{ article.title }}</h1>
+
+            {% if article.authors.exists %}
+            <div class="flex items-center gap-2 mb-8">
+                <span class="text-muted">Por</span>
+                {% for author in article.authors.all %}
+                    <span class="font-medium text-text-main">{{ author.get_full_name|default:author.username }}</span>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="prose prose-invert max-w-none mb-12">
+                <p class="text-xl text-muted mb-8 font-serif leading-relaxed">{{ article.summary }}</p>
+                
+                {% if article.video_url %}
+                <div class="aspect-w-16 aspect-h-9 mb-8">
+                    <iframe src="{{ article.video_url }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                {% endif %}
+
+                <div class="text-text-main font-serif leading-relaxed space-y-6">
+                    {{ article.content|safe }}
+                </div>
+            </div>
+
+
+
+            {% if article.tags %}
+            <div class="mt-12 pt-8 border-t border-white/10">
+                <div class="flex flex-wrap gap-2">
+                    {% for tag in article.get_tags_list %}
+                    <span class="px-3 py-1 bg-white/5 rounded-full text-xs text-muted hover:text-accent transition-colors cursor-pointer">#{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </article>
+</div>
+{% endblock %}

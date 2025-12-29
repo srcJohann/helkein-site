@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+
+{% block content %}
+<div class="flex items-center justify-center min-h-[calc(100vh-200px)] py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 bg-surface p-8 rounded-xl border border-white/5 shadow-xl">
+        <div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-text-main">
+                Completar Cadastro
+            </h2>
+            <p class="mt-2 text-center text-sm text-muted">
+                Você está se cadastrando com {{ provider_name }}. Por favor, confirme suas informações.
+            </p>
+        </div>
+        <form class="mt-8 space-y-6" method="post" action="{% url 'socialaccount_signup' %}">
+            {% csrf_token %}
+            {% if form.errors %}
+                <div class="bg-red-900/20 border-l-4 border-red-500 p-4 mb-4">
+                    <p class="text-red-400 text-sm">Por favor, corrija os erros abaixo.</p>
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            
+            <div class="rounded-md shadow-sm space-y-4">
+                {% for field in form %}
+                <div>
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-text-main mb-1">{{ field.label }}</label>
+                    <input id="{{ field.id_for_label }}" name="{{ field.name }}" type="{{ field.field.widget.input_type }}" {% if field.field.required %}required{% endif %} value="{{ field.value|default:'' }}" class="appearance-none rounded-md relative block w-full px-4 py-3 bg-bg border border-white/10 placeholder-muted text-text-main focus:outline-none focus:ring-accent focus:border-accent focus:z-10 sm:text-sm transition-colors" placeholder="{{ field.label }}">
+                    {% if field.help_text %}
+                        <p class="mt-1 text-xs text-muted">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <p class="text-red-400 text-xs mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+
+            <div>
+                <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-md text-white bg-accent hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent transition-colors shadow-lg shadow-accent/20">
+                    Cadastrar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
