@@ -19,6 +19,9 @@ class Plan(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     current_plan = models.ForeignKey(Plan, on_delete=models.SET_NULL, null=True, blank=True)
+    stripe_subscription_id = models.CharField(max_length=100, blank=True, null=True)
+    subscription_end_date = models.DateTimeField(blank=True, null=True)
+    cancel_at_period_end = models.BooleanField(default=False)
     
     class Meta:
         verbose_name = "Perfil de Usuário"
@@ -159,3 +162,66 @@ class Lesson(models.Model):
 
     def __str__(self):
         return f"{self.course.title} - {self.title}"
+
+class CourseProgress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='course_progress')
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    completed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['user', 'lesson']
+        verbose_name = "Progresso do Curso"
+        verbose_name_plural = "Progressos dos Cursos"
+
+    def __str__(self):
+        return f"{self.user.username} - {self.lesson.title}"
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+    
+    # Content types
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comments', null=True, blank=True)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='comments', null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Comentário"
+        verbose_name_plural = "Comentários"
+
+    def __str__(self):
+        return f"Comment by {self.user.username} on {self.created_at}"
+
+class PaymentHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payments')
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20)
+    stripe_id = models.CharField(max_length=100, blank=True, null=True)
+    plan_name = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        ordering = ['-date']
+        verbose_name = "Histórico de Pagamento"
+        verbose_name_plural = "Histórico de Pagamentos"
+
+    def __str__(self):
+        return f"{self.user.username} - {self.amount} - {self.date}"
+
+class ShopItem(models.Model):
+    title = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='shop/covers/', help_text="Dimensão recomendada: 510x539")
+    amazon_link = models.URLField()
+    order = models.PositiveIntegerField(default=0)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['order']
+        verbose_name = "Item da Loja"
+        verbose_name_plural = "Itens da Loja"
+
+    def __str__(self):
+        return self.title

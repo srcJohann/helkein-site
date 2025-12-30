@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Plan, UserProfile, Article, Course, Lesson, Module, Artigo, Ensaio, Resenha, Recomendacao, Multimidia
+from .models import Plan, UserProfile, Article, Course, Lesson, Module, Artigo, Ensaio, Resenha, Recomendacao, Multimidia, Comment, ShopItem
 
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'status', 'created_at')
@@ -77,4 +77,6 @@ class LessonAdmin(admin.ModelAdmin):
 
 admin.site.register(Plan)
 admin.site.register(UserProfile)
+admin.site.register(Comment)
+admin.site.register(ShopItem)
 # admin.site.register(Article, ArticleAdmin) # Optional: Keep generic view or remove

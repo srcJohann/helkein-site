@@ -17,40 +17,183 @@
                 </div>
                 
                 <nav class="space-y-2">
-                    <a href="#" class="block px-4 py-2 bg-white/5 text-accent rounded-md font-medium">Painel</a>
-                    <a href="#" class="block px-4 py-2 text-muted hover:text-text-main hover:bg-white/5 rounded-md transition-colors">Meus Cursos</a>
-                    <a href="#" class="block px-4 py-2 text-muted hover:text-text-main hover:bg-white/5 rounded-md transition-colors">Favoritos</a>
-                    <a href="#" class="block px-4 py-2 text-muted hover:text-text-main hover:bg-white/5 rounded-md transition-colors">Configurações</a>
+                    <a href="#dashboard" class="block px-4 py-2 bg-white/5 text-accent rounded-md font-medium">Painel</a>
+                    <a href="#courses" class="block px-4 py-2 text-muted hover:text-text-main hover:bg-white/5 rounded-md transition-colors">Meus Cursos</a>
+                    <a href="#payments" class="block px-4 py-2 text-muted hover:text-text-main hover:bg-white/5 rounded-md transition-colors">Pagamentos</a>
+                    <a href="#comments" class="block px-4 py-2 text-muted hover:text-text-main hover:bg-white/5 rounded-md transition-colors">Comentários</a>
                 </nav>
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="md:col-span-3">
-            <h1 class="text-3xl font-bold text-text-main mb-8">Painel do Membro</h1>
+        <div class="md:col-span-3 space-y-12">
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="bg-surface border border-white/5 rounded-lg p-6">
-                    <h3 class="text-muted text-sm font-medium mb-2">Cursos em Andamento</h3>
-                    <p class="text-3xl font-bold text-text-main">0</p>
+            <!-- Plan Status -->
+            <section id="dashboard">
+                <h1 class="text-3xl font-bold text-text-main mb-8">Painel do Membro</h1>
+                <div class="bg-surface border border-white/5 rounded-lg p-6 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-muted text-sm font-medium mb-1">Plano Atual</h3>
+                        <p class="text-2xl font-bold text-accent">
+                            {% if current_plan %}
+                                {{ current_plan.name }}
+                            {% else %}
+                                Gratuito
+                            {% endif %}
+                        </p>
+                        {% if user.profile.subscription_end_date %}
+                        <p class="text-xs text-muted mt-1">
+                            {% if user.profile.cancel_at_period_end %}
+                            Expira em:
+                            {% else %}
+                            Renova em:
+                            {% endif %}
+                            {{ user.profile.subscription_end_date|date:"d/m/Y" }}
+                        </p>
+                        {% endif %}
+                    </div>
+                    <div class="flex gap-4">
+                        {% if current_plan and current_plan.level > 0 and not user.profile.cancel_at_period_end %}
+                        <button onclick="cancelSubscription()" class="px-4 py-2 border border-red-500/30 text-red-400 hover:bg-red-500/10 rounded transition-colors text-sm font-bold uppercase">
+                            Cancelar Assinatura
+                        </button>
+                        {% endif %}
+                        
+                        {% if not current_plan or current_plan.name != 'Mecenas' %}
+                        <a href="{% url 'subscribe' %}" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-text-main rounded transition-colors text-sm font-bold uppercase">
+                            Fazer Upgrade
+                        </a>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="bg-surface border border-white/5 rounded-lg p-6">
-                    <h3 class="text-muted text-sm font-medium mb-2">Artigos Salvos</h3>
-                    <p class="text-3xl font-bold text-text-main">0</p>
-                </div>
-                <div class="bg-surface border border-white/5 rounded-lg p-6">
-                    <h3 class="text-muted text-sm font-medium mb-2">Certificados</h3>
-                    <p class="text-3xl font-bold text-text-main">0</p>
-                </div>
-            </div>
+            </section>
 
-            <h2 class="text-xl font-bold text-text-main mb-4">Continuar Estudando</h2>
-            <div class="bg-surface border border-white/5 rounded-lg p-8 text-center">
-                <p class="text-muted mb-4">Você ainda não iniciou nenhum curso.</p>
-                <a href="{% url 'content_list' %}#cursos" class="inline-block px-6 py-3 bg-accent text-white font-medium rounded-md hover:bg-accent-hover transition-colors">
-                    Explorar Cursos
-                </a>
-            </div>
+            <script>
+                function cancelSubscription() {
+                    if (confirm('Tem certeza que deseja cancelar sua assinatura? Você continuará com acesso até o fim do período atual.')) {
+                        fetch('{% url "cancel_subscription" %}', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': '{{ csrf_token }}',
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                alert(data.message);
+                                location.reload();
+                            } else {
+                                alert('Erro ao cancelar: ' + data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Erro ao processar solicitação.');
+                        });
+                    }
+                }
+            </script>
+
+            <!-- Course Progress -->
+            <section id="courses">
+                <h2 class="text-xl font-bold text-text-main mb-4">Meus Cursos</h2>
+                <div class="grid grid-cols-1 gap-6">
+                    {% for item in course_data %}
+                    <div class="bg-surface border border-white/5 rounded-lg p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="font-bold text-lg text-text-main">{{ item.course.title }}</h3>
+                                <p class="text-sm text-muted">{{ item.course.lessons.count }} aulas</p>
+                            </div>
+                            <span class="text-2xl font-bold text-accent">{{ item.progress }}%</span>
+                        </div>
+                        <div class="w-full bg-white/5 rounded-full h-2 mb-4">
+                            <div class="bg-accent h-2 rounded-full" style="width: {{ item.progress }}%"></div>
+                        </div>
+                        <a href="{% url 'course_detail' item.course.slug %}" class="text-sm text-accent hover:text-white transition-colors font-medium">
+                            {% if item.progress > 0 %}Continuar Curso{% else %}Iniciar Curso{% endif %} &rarr;
+                        </a>
+                    </div>
+                    {% empty %}
+                    <div class="bg-surface border border-white/5 rounded-lg p-8 text-center">
+                        <p class="text-muted mb-4">Você ainda não iniciou nenhum curso.</p>
+                        <a href="{% url 'content_list' %}#cursos" class="inline-block px-6 py-3 bg-accent text-white font-medium rounded-md hover:bg-accent-hover transition-colors">
+                            Explorar Cursos
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Payment History -->
+            <section id="payments">
+                <h2 class="text-xl font-bold text-text-main mb-4">Histórico de Pagamentos</h2>
+                <div class="bg-surface border border-white/5 rounded-lg overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-white/5 text-muted text-xs uppercase">
+                            <tr>
+                                <th class="px-6 py-3">Data</th>
+                                <th class="px-6 py-3">Plano</th>
+                                <th class="px-6 py-3">Valor</th>
+                                <th class="px-6 py-3">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/5">
+                            {% for payment in payments %}
+                            <tr>
+                                <td class="px-6 py-4 text-sm text-text-main">{{ payment.date|date:"d/m/Y" }}</td>
+                                <td class="px-6 py-4 text-sm text-text-main">{{ payment.plan_name|default:"-" }}</td>
+                                <td class="px-6 py-4 text-sm text-text-main">R$ {{ payment.amount }}</td>
+                                <td class="px-6 py-4 text-sm">
+                                    <span class="px-2 py-1 rounded text-xs font-bold 
+                                        {% if payment.status == 'paid' %}bg-green-500/10 text-green-400
+                                        {% else %}bg-yellow-500/10 text-yellow-400{% endif %}">
+                                        {{ payment.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="px-6 py-8 text-center text-muted text-sm">Nenhum pagamento registrado.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Comments Replies -->
+            <section id="comments">
+                <h2 class="text-xl font-bold text-text-main mb-4">Respostas aos seus Comentários</h2>
+                <div class="space-y-4">
+                    {% for reply in replies %}
+                    <div class="bg-surface border border-white/5 rounded-lg p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white font-bold text-sm">
+                                {{ reply.user.username|slice:":1"|upper }}
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-text-main text-sm">{{ reply.user.username }}</h4>
+                                <span class="text-xs text-muted">respondeu ao seu comentário em {{ reply.created_at|date:"d M Y" }}</span>
+                            </div>
+                        </div>
+                        <p class="text-muted text-sm mb-4">{{ reply.content }}</p>
+                        
+                        {% if reply.article %}
+                        <a href="{% url 'article_detail' reply.article.slug %}" class="text-xs text-accent hover:text-white transition-colors">Ver no artigo &rarr;</a>
+                        {% elif reply.lesson %}
+                        <a href="{% url 'lesson_detail' reply.lesson.course.slug reply.lesson.id %}" class="text-xs text-accent hover:text-white transition-colors">Ver na aula &rarr;</a>
+                        {% endif %}
+                    </div>
+                    {% empty %}
+                    <div class="bg-surface border border-white/5 rounded-lg p-8 text-center">
+                        <p class="text-muted">Nenhuma resposta recente aos seus comentários.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
         </div>
     </div>
 </div>

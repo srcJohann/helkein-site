@@ -5,7 +5,7 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Plan, UserProfile
+from .models import Plan, UserProfile, PaymentHistory
 import logging
 
 logger = logging.getLogger(__name__)
@@ -56,6 +56,15 @@ def create_checkout_session(request, plan_id):
         return JsonResponse({'error': str(e)}, status=500)
 
 def payment_success(request):
+    session_id = request.GET.get('session_id')
+    if session_id:
+        try:
+            session = stripe.checkout.Session.retrieve(session_id)
+            if session.payment_status == 'paid':
+                handle_checkout_session_completed(session)
+        except Exception as e:
+            logger.error(f"Error retrieving session in success view: {e}")
+            
     return render(request, 'core/payment_success.html')
 
 def payment_cancel(request):
@@ -101,29 +110,72 @@ def handle_checkout_session_completed(session):
     if subscription_id:
         try:
             subscription = stripe.Subscription.retrieve(subscription_id)
-            price_id = subscription['items']['data'][0]['price']['id']
+            price_data = subscription['items']['data'][0]['price']
+            price_id = price_data['id']
+            product_id = price_data.get('product')
             
-            # Find the plan matching this price_id
-            # First check DB
+            # Find the plan matching this price_id OR product_id
+            # First check DB for exact price match
             plan = Plan.objects.filter(stripe_price_id=price_id).first()
             
-            # If not found, check settings mapping (fallback)
+            # If not found, check if we have a plan with the matching product ID
+            if not plan and product_id:
+                plan = Plan.objects.filter(stripe_price_id=product_id).first()
+            
+            # If still not found, check settings mapping (fallback)
             if not plan:
-                if price_id == settings.STRIPE_PRICE_ID_APOIADOR:
+                if price_id == getattr(settings, 'STRIPE_PRICE_ID_APOIADOR', None):
                     plan = Plan.objects.filter(name__iexact='Apoiador').first()
-                elif price_id == settings.STRIPE_PRICE_ID_IRRESTRITO:
+                elif price_id == getattr(settings, 'STRIPE_PRICE_ID_IRRESTRITO', None):
                     plan = Plan.objects.filter(name__iexact='Irrestrito').first()
-                elif price_id == settings.STRIPE_PRICE_ID_MECENAS:
+                elif price_id == getattr(settings, 'STRIPE_PRICE_ID_MECENAS', None):
                     plan = Plan.objects.filter(name__iexact='Mecenas').first()
             
             if plan:
                 # Update user profile
                 profile, created = UserProfile.objects.get_or_create(user=user)
                 profile.current_plan = plan
+                profile.stripe_subscription_id = subscription_id
+                # Convert timestamp to datetime
+                from datetime import datetime, timezone
+                if 'current_period_end' in subscription:
+                    profile.subscription_end_date = datetime.fromtimestamp(subscription['current_period_end'], tz=timezone.utc)
                 profile.save()
                 logger.info(f"Updated plan for user {user.username} to {plan.name}")
+                
+                # Record payment history
+                amount_total = session.get('amount_total', 0) / 100.0  # Convert cents to currency unit
+                
+                # Check if payment history already exists for this session to avoid duplicates
+                if not PaymentHistory.objects.filter(stripe_id=session.get('id')).exists():
+                    PaymentHistory.objects.create(
+                        user=user,
+                        amount=amount_total,
+                        status=session.get('payment_status', 'unknown'),
+                        stripe_id=session.get('id'),
+                        plan_name=plan.name
+                    )
             else:
                 logger.warning(f"Plan not found for price ID {price_id}")
                 
         except Exception as e:
             logger.error(f"Error processing subscription: {e}")
+
+@login_required
+def cancel_subscription(request):
+    if request.method == 'POST':
+        try:
+            profile = request.user.profile
+            if profile.stripe_subscription_id:
+                stripe.Subscription.modify(
+                    profile.stripe_subscription_id,
+                    cancel_at_period_end=True
+                )
+                profile.cancel_at_period_end = True
+                profile.save()
+                return JsonResponse({'status': 'success', 'message': 'Assinatura cancelada com sucesso. Você terá acesso até o fim do período atual.'})
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Nenhuma assinatura ativa encontrada.'}, status=400)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    return JsonResponse({'status': 'error', 'message': 'Método não permitido'}, status=405)

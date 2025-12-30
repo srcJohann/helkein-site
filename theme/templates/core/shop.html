@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Loja - Helkein{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative bg-surface border-b border-white/5 py-20 md:py-32 overflow-hidden mb-12">
+    <!-- Background Image -->
+    <div class="absolute inset-0 z-0">
+        <img src="{% static 'img/school_of_athens.jpg' %}" alt="School of Athens" class="w-full h-full object-cover opacity-20">
+        <div class="absolute inset-0 bg-gradient-to-l from-surface via-surface/90 to-transparent"></div>
+    </div>
+
+    <div class="absolute inset-0 bg-gradient-to-bl from-accent/5 to-transparent pointer-events-none z-0"></div>
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-3xl ml-auto text-right">
+            <h1 class="text-5xl md:text-7xl font-bold text-text-main mb-6 leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                Nossa Loja
+            </h1>
+            <p class="text-xl text-muted mb-0 leading-relaxed">
+                Nossa loja é onde reunimos todos — ou quase — os livros recomendados em nosso site, em especial aqueles ausentes em nossos guias de leitura. Separamos as indicações por temas e autores a fim de facilitar sua aquisição. O estudante não precisa se preocupar com meios de pagamento ou envio, pois tudo é gerenciado pela Amazon. Retemos somente uma pequena comissão de 8% a 10%.
+            </p>
+        </div>
+    </div>
+</section>
+
+<div class="container mx-auto px-4 pb-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {% for item in items %}
+        <a href="{{ item.amazon_link }}" target="_blank" rel="noopener noreferrer" class="group block relative bg-surface border border-white/10 rounded-lg overflow-hidden hover:border-accent transition-colors">
+            <div class="aspect-[510/539] relative overflow-hidden">
+                {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                {% else %}
+                <div class="w-full h-full bg-white/5 flex items-center justify-center text-muted">
+                    Sem imagem
+                </div>
+                {% endif %}
+                
+                <!-- Overlay with title on hover or always visible? 
+                     The image provided by user shows text ON the image (e.g. "PLATÃO", "ARISTÓTELES").
+                     If the user uploads images WITH text, I don't need to overlay text.
+                     But if they upload just the background, I should overlay text.
+                     The user said "cards com imagens...".
+                     The example image shows text clearly integrated into the design.
+                     I will assume the user might upload images with text, OR I should overlay the title.
+                     Given "ShopItem" has a title, I should probably display it.
+                     I'll add an overlay at the bottom or center.
+                     Looking at the reference image, the text is big and centered.
+                     I'll add the title centered over the image with a dark overlay.
+                -->
+                <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center p-4">
+                    <h2 class="text-3xl font-bold text-white text-center uppercase tracking-wider drop-shadow-lg">{{ item.title }}</h2>
+                </div>
+            </div>
+        </a>
+        {% empty %}
+        <div class="col-span-full text-center py-12 text-muted">
+            <p>Nenhum item disponível na loja no momento.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
