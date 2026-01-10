@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import Plan, UserProfile, Article, Course, Lesson, Module, Artigo, Ensaio, Resenha, Recomendacao, Multimidia, Comment, ShopItem
+from .models import Plan, UserProfile, Article, Course, Lesson, Module, Artigo, Ensaio, Resenha, Recomendacao, Multimidia, Comment, ShopItem, PaymentHistory, DailyVisit
 
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'status', 'created_at')
+    list_display = ('title', 'category', 'status', 'views', 'created_at')
     list_filter = ('status', 'category')
     search_fields = ('title', 'summary', 'content')
     prepopulated_fields = {'slug': ('title',)}
@@ -50,7 +50,7 @@ class ModuleInline(admin.StackedInline):
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ('title', 'status', 'created_at')
+    list_display = ('title', 'status', 'views', 'created_at')
     prepopulated_fields = {'slug': ('title',)}
     inlines = [ModuleInline]
 
@@ -79,4 +79,6 @@ admin.site.register(Plan)
 admin.site.register(UserProfile)
 admin.site.register(Comment)
 admin.site.register(ShopItem)
+admin.site.register(PaymentHistory)
+admin.site.register(DailyVisit)
 # admin.site.register(Article, ArticleAdmin) # Optional: Keep generic view or remove

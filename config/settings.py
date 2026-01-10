@@ -81,6 +81,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
     'axes.middleware.AxesMiddleware',
+    'core.middleware.DailyVisitMiddleware',
 ]
 
 if DEBUG:

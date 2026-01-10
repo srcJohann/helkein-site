@@ -14,8 +14,8 @@
             </div>
 
             {% if lesson.vimeo_video_id %}
-            <div class="relative bg-black rounded-xl overflow-hidden w-full shadow-2xl border border-white/10 mb-8" style="padding-bottom: 56.25%;">
-                <iframe src="https://player.vimeo.com/video/{{ lesson.vimeo_video_id }}" class="absolute top-0 left-0 w-full h-full" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+            <div class="relative bg-black rounded-xl overflow-hidden w-full shadow-2xl border border-white/10 mb-8">
+                <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/{{ lesson.vimeo_video_id }}?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="{{ lesson.title }}"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
             </div>
             {% else %}
             <div class="bg-surface border border-white/5 rounded-lg p-12 text-center mb-8">
@@ -89,9 +89,53 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="text-muted leading-relaxed">
+                        <div class="text-muted leading-relaxed mb-4">
                             {{ comment.content|linebreaks }}
                         </div>
+
+                        {% if user.is_authenticated %}
+                        <button onclick="toggleReplyForm('{{ comment.id }}')" class="text-sm text-accent hover:text-white transition-colors mb-4">
+                            Responder
+                        </button>
+                        
+                        <form id="reply-form-{{ comment.id }}" method="post" class="hidden mb-4 ml-8 border-l-2 border-accent pl-4">
+                            {% csrf_token %}
+                            <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                            <div class="mb-2">
+                                {{ comment_form.content }}
+                            </div>
+                            <button type="submit" class="px-4 py-2 bg-accent text-white rounded text-sm hover:bg-accent-hover transition-colors">
+                                Enviar Resposta
+                            </button>
+                        </form>
+                        {% endif %}
+
+                        <!-- Replies -->
+                        {% with replies=comment.replies.all %}
+                        {% if replies %}
+                        <div class="space-y-4 mt-6">
+                            {% for reply in replies %}
+                            {% if reply.active %}
+                            <div class="ml-8 pl-4 border-l border-white/10">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-8 h-8 rounded-full bg-surface border border-white/10 flex items-center justify-center text-white text-sm">
+                                        {{ reply.user.username|first|upper }}
+                                    </div>
+                                    <div>
+                                        <h5 class="font-bold text-text-main text-sm">{{ reply.user.username }}</h5>
+                                        <span class="text-xs text-muted">{{ reply.created_at|date:"d M Y \à\s H:i" }}</span>
+                                    </div>
+                                </div>
+                                <div class="text-sm text-muted">
+                                    {{ reply.content|linebreaks }}
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        {% endwith %}
+
                     </div>
                     {% empty %}
                     <p class="text-muted italic">Seja o primeiro a comentar.</p>
@@ -100,6 +144,17 @@
             </div>
         </div>
     </div>
+    
+    <script>
+    function toggleReplyForm(commentId) {
+        const form = document.getElementById(`reply-form-${commentId}`);
+        if (form.classList.contains('hidden')) {
+            form.classList.remove('hidden');
+        } else {
+            form.classList.add('hidden');
+        }
+    }
+    </script>
 
     <!-- Sidebar (Playlist) -->
     <div class="w-full lg:w-96 bg-surface border-l border-white/5 flex flex-col h-auto lg:h-[calc(100vh-80px)] sticky top-0">

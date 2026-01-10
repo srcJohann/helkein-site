@@ -10,9 +10,17 @@ services:
       - media_data:/app/media
     environment:
       - DEBUG=False
-      - ALLOWED_HOSTS=helkein.srcjohann.com.br,localhost,127.0.0.1
+      - ALLOWED_HOSTS=helkein.com,localhost,127.0.0.1
+      - PYTHONUNBUFFERED=1
+    tty: true
+    stdin_open: true
     networks:
       - network_public
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
     deploy:
       mode: replicated
       replicas: 1
@@ -25,7 +33,14 @@ services:
         max_attempts: 3
       labels:
         traefik.enable: "true"
-        traefik.http.routers.helkein.rule: "Host(`helkein.srcjohann.com.br`)"
+        traefik.http.routers.helkein.rule: "Host(`helkein.com`)"
+        traefik.http.routers.helkein.entrypoints: "websecure"
+        traefik.http.routers.helkein.tls.certresolver: "letsencryptresolver"
+        traefik.http.services.helkein.loadbalancer.server.port: "8000"
+        traefik.http.routers.helkein.service: "helkein"
+    labels:
+        traefik.enable: "true"
+        traefik.http.routers.helkein.rule: "Host(`helkein.com`)"
         traefik.http.routers.helkein.entrypoints: "websecure"
         traefik.http.routers.helkein.tls.certresolver: "letsencryptresolver"
         traefik.http.services.helkein.loadbalancer.server.port: "8000"

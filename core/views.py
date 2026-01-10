@@ -2,7 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import FileResponse, Http404, HttpResponseForbidden, JsonResponse
 from django.contrib import messages
-from .models import Article, Course, Lesson, Plan, ShopItem, PaymentHistory, CourseProgress, Comment
+from django.db.models import F
+from .models import Article, Course, Lesson, Plan, ShopItem, PaymentHistory, CourseProgress, Comment, DailyVisit, UserProfile
 from .forms import CommentForm
 
 def check_plan_access(user, required_plan):
@@ -49,13 +50,16 @@ def course_list(request):
 def article_detail(request, slug):
     article = get_object_or_404(Article, slug=slug, status='published')
     
+    # Increment views
+    Article.objects.filter(pk=article.pk).update(views=F('views') + 1)
+    
     if not check_plan_access(request.user, article.required_plan):
         if not request.user.is_authenticated:
             return redirect('account_login')
         messages.warning(request, 'Este conteúdo requer um plano superior.')
         return redirect('subscribe')
     
-    comments = article.comments.filter(active=True)
+    comments = article.comments.filter(active=True, parent__isnull=True)
     
     if request.method == 'POST':
         if not request.user.is_authenticated:
@@ -65,6 +69,15 @@ def article_detail(request, slug):
             comment = form.save(commit=False)
             comment.user = request.user
             comment.article = article
+            
+            parent_id = request.POST.get('parent_id')
+            if parent_id:
+                try:
+                    parent_comment = Comment.objects.get(id=parent_id)
+                    comment.parent = parent_comment
+                except Comment.DoesNotExist:
+                    pass
+            
             comment.save()
             messages.success(request, 'Comentário enviado com sucesso!')
             return redirect('article_detail', slug=slug)
@@ -79,13 +92,17 @@ def article_detail(request, slug):
 
 def course_detail(request, slug):
     course = get_object_or_404(Course, slug=slug, status='published')
+    
+    # Increment views
+    Course.objects.filter(pk=course.pk).update(views=F('views') + 1)
+    
     return render(request, 'core/course_detail.html', {'course': course})
 
 def lesson_detail(request, course_slug, lesson_id):
     course = get_object_or_404(Course, slug=course_slug, status='published')
     lesson = get_object_or_404(Lesson, id=lesson_id, course=course)
     
-    comments = lesson.comments.filter(active=True)
+    comments = lesson.comments.filter(active=True, parent__isnull=True)
     
     is_completed = False
     if request.user.is_authenticated:
@@ -99,6 +116,15 @@ def lesson_detail(request, course_slug, lesson_id):
             comment = form.save(commit=False)
             comment.user = request.user
             comment.lesson = lesson
+            
+            parent_id = request.POST.get('parent_id')
+            if parent_id:
+                try:
+                    parent_comment = Comment.objects.get(id=parent_id)
+                    comment.parent = parent_comment
+                except Comment.DoesNotExist:
+                    pass
+            
             comment.save()
             messages.success(request, 'Comentário enviado com sucesso!')
             return redirect('lesson_detail', course_slug=course_slug, lesson_id=lesson_id)
@@ -125,6 +151,30 @@ def contact(request):
 
 @login_required
 def members(request):
+    if request.user.is_staff:
+        # Admin Dashboard Logic
+        subscribers = UserProfile.objects.filter(current_plan__level__gt=0).select_related('user', 'current_plan')
+        payments = PaymentHistory.objects.all().select_related('user').order_by('-date')
+        
+        # Daily Access (last 30 days)
+        daily_visits = DailyVisit.objects.all().order_by('date') # Ascending for chart
+        # Limit to last 30 days in template or here? Let's take last 30 here.
+        daily_visits = list(daily_visits) # Evaluate
+        if len(daily_visits) > 30:
+            daily_visits = daily_visits[-30:]
+        
+        # Most Accessed Content
+        popular_articles = Article.objects.filter(status='published').order_by('-views')[:5]
+        popular_courses = Course.objects.filter(status='published').order_by('-views')[:5]
+        
+        return render(request, 'core/staff_dashboard.html', {
+            'subscribers': subscribers,
+            'payments': payments,
+            'daily_visits': daily_visits,
+            'popular_articles': popular_articles,
+            'popular_courses': popular_courses,
+        })
+
     # 1. Plan Status
     user_profile = getattr(request.user, 'profile', None)
     current_plan = user_profile.current_plan if user_profile else None

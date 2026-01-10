@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold text-text-main mb-8">Painel Administrativo</h1>
+
+        <!-- Daily Access Chart -->
+        <div class="bg-surface rounded-xl shadow-sm border border-white/10 p-6 mb-8">
+            <h2 class="text-xl font-bold text-text-main mb-4">Acessos Diários (Últimos 30 dias)</h2>
+            <div class="relative h-64 w-full">
+                <canvas id="accessChart"></canvas>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <!-- Popular Articles -->
+            <div class="bg-surface rounded-xl shadow-sm border border-white/10 p-6">
+                <h2 class="text-xl font-bold text-text-main mb-4">Artigos Mais Acessados</h2>
+                <ul class="space-y-3">
+                    {% for article in popular_articles %}
+                    <li class="flex justify-between items-center border-b border-white/5 pb-2 last:border-0">
+                        <a href="{% url 'article_detail' article.slug %}" class="text-accent hover:underline truncate">{{ article.title }}</a>
+                        <span class="text-muted text-sm">{{ article.views }} views</span>
+                    </li>
+                    {% empty %}
+                    <li class="text-muted">Nenhum dado ainda.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Popular Courses -->
+            <div class="bg-surface rounded-xl shadow-sm border border-white/10 p-6">
+                <h2 class="text-xl font-bold text-text-main mb-4">Cursos Mais Acessados</h2>
+                <ul class="space-y-3">
+                    {% for course in popular_courses %}
+                    <li class="flex justify-between items-center border-b border-white/5 pb-2 last:border-0">
+                        <a href="{% url 'course_detail' course.slug %}" class="text-accent hover:underline truncate">{{ course.title }}</a>
+                        <span class="text-muted text-sm">{{ course.views }} views</span>
+                    </li>
+                    {% empty %}
+                    <li class="text-muted">Nenhum dado ainda.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Subscribers Table -->
+        <div class="bg-surface rounded-xl shadow-sm border border-white/10 overflow-hidden mb-8">
+            <div class="px-6 py-4 border-b border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
+                <h2 class="text-xl font-bold text-text-main">Assinantes Ativos</h2>
+                <input type="text" id="subscriberSearch" placeholder="Pesquisar assinante..." class="bg-bg border border-white/10 rounded-full py-1.5 px-4 text-sm text-text-main placeholder-muted focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent w-full md:w-64 transition-all">
+            </div>
+            <div class="overflow-x-auto max-h-[500px] overflow-y-auto">
+                <table class="w-full text-left text-sm text-muted" id="subscribersTable">
+                    <thead class="bg-white/5 text-text-main font-medium border-b border-white/10 sticky top-0 bg-surface z-10">
+                        <tr>
+                            <th class="px-6 py-3">Usuário</th>
+                            <th class="px-6 py-3">Email</th>
+                            <th class="px-6 py-3">Plano</th>
+                            <th class="px-6 py-3">Stripe ID</th>
+                            <th class="px-6 py-3">Fim da Assinatura</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5">
+                        {% for profile in subscribers %}
+                        <tr class="hover:bg-white/5 transition-colors">
+                            <td class="px-6 py-3 font-medium text-text-main">{{ profile.user.username }}</td>
+                            <td class="px-6 py-3">{{ profile.user.email }}</td>
+                            <td class="px-6 py-3">
+                                <span class="px-2 py-1 bg-accent/10 text-accent rounded-full text-xs border border-accent/20">
+                                    {{ profile.current_plan.name }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-3 font-mono text-xs">{{ profile.stripe_subscription_id|default:"-" }}</td>
+                            <td class="px-6 py-3">{{ profile.subscription_end_date|date:"d/m/Y"|default:"-" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="px-6 py-4 text-center text-muted">Nenhum assinante encontrado.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Payment History Table -->
+        <div class="bg-surface rounded-xl shadow-sm border border-white/10 overflow-hidden">
+            <div class="px-6 py-4 border-b border-white/10">
+                <h2 class="text-xl font-bold text-text-main">Histórico de Pagamentos</h2>
+            </div>
+            <div class="overflow-x-auto max-h-[500px] overflow-y-auto">
+                <table class="w-full text-left text-sm text-muted">
+                    <thead class="bg-white/5 text-text-main font-medium border-b border-white/10 sticky top-0 bg-surface z-10">
+                        <tr>
+                            <th class="px-6 py-3">Data</th>
+                            <th class="px-6 py-3">Usuário</th>
+                            <th class="px-6 py-3">Email</th>
+                            <th class="px-6 py-3">Valor</th>
+                            <th class="px-6 py-3">Plano</th>
+                            <th class="px-6 py-3">Status</th>
+                            <th class="px-6 py-3">Stripe ID</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5">
+                        {% for payment in payments %}
+                        <tr class="hover:bg-white/5 transition-colors">
+                            <td class="px-6 py-3">{{ payment.date|date:"d/m/Y H:i" }}</td>
+                            <td class="px-6 py-3 font-medium text-text-main">{{ payment.user.username }}</td>
+                            <td class="px-6 py-3">{{ payment.user.email }}</td>
+                            <td class="px-6 py-3">R$ {{ payment.amount }}</td>
+                            <td class="px-6 py-3">{{ payment.plan_name|default:"-" }}</td>
+                            <td class="px-6 py-3">
+                                <span class="px-2 py-1 rounded-full text-xs border 
+                                    {% if payment.status == 'paid' or payment.status == 'succeeded' %}bg-green-900/20 text-green-400 border-green-900/30
+                                    {% else %}bg-yellow-900/20 text-yellow-400 border-yellow-900/30{% endif %}">
+                                    {{ payment.status }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-3 font-mono text-xs">{{ payment.stripe_id|default:"-" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="px-6 py-4 text-center text-muted">Nenhum pagamento registrado.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Chart Configuration
+    const ctx = document.getElementById('accessChart').getContext('2d');
+    const dates = [{% for visit in daily_visits %}"{{ visit.date|date:'d/m' }}",{% endfor %}];
+    const counts = [{% for visit in daily_visits %}{{ visit.count }},{% endfor %}];
+
+    // Get accent color from CSS variable or hardcode a gold/yellow tone matching the site
+    // Assuming a gold/yellow accent based on "Helkein" logo drop-shadow in base.html (rgba(201,179,126,0.5))
+    const accentColor = 'rgba(201, 179, 126, 1)';
+    const accentColorTransparent = 'rgba(201, 179, 126, 0.1)';
+    const gridColor = 'rgba(255, 255, 255, 0.1)';
+    const textColor = '#9ca3af'; // gray-400
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Acessos Diários',
+                data: counts,
+                borderColor: accentColor,
+                backgroundColor: accentColorTransparent,
+                tension: 0.3,
+                fill: true,
+                pointBackgroundColor: accentColor,
+                pointBorderColor: '#000'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: { color: '#e5e7eb' } // gray-200
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: gridColor },
+                    ticks: { color: textColor, stepSize: 1 }
+                },
+                x: {
+                    grid: { color: gridColor },
+                    ticks: { color: textColor }
+                }
+            }
+        }
+    });
+
+    // Search Functionality
+    document.getElementById('subscriberSearch').addEventListener('keyup', function() {
+        const searchValue = this.value.toLowerCase();
+        const table = document.getElementById('subscribersTable');
+        const rows = table.getElementsByTagName('tr');
+
+        for (let i = 1; i < rows.length; i++) { // Start from 1 to skip header
+            const row = rows[i];
+            const cells = row.getElementsByTagName('td');
+            let found = false;
+
+            if (cells.length > 0) {
+                // Search in Username (0), Email (1), Plan (2), Stripe ID (3)
+                const username = cells[0].textContent.toLowerCase();
+                const email = cells[1].textContent.toLowerCase();
+                const plan = cells[2].textContent.toLowerCase();
+                const stripeId = cells[3].textContent.toLowerCase();
+
+                if (username.includes(searchValue) || 
+                    email.includes(searchValue) || 
+                    plan.includes(searchValue) || 
+                    stripeId.includes(searchValue)) {
+                    found = true;
+                }
+            }
+
+            if (found) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        }
+    });
+</script>
+{% endblock %}

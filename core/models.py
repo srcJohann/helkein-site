@@ -64,6 +64,7 @@ class Article(models.Model):
     required_plan = models.ForeignKey(Plan, on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    views = models.PositiveIntegerField(default=0)
 
     def get_tags_list(self):
         return [tag.strip() for tag in self.tags.split(',')] if self.tags else []
@@ -119,6 +120,7 @@ class Course(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    views = models.PositiveIntegerField(default=0)
 
     class Meta:
         verbose_name = "Curso"
@@ -225,3 +227,15 @@ class ShopItem(models.Model):
 
     def __str__(self):
         return self.title
+
+class DailyVisit(models.Model):
+    date = models.DateField(unique=True)
+    count = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['-date']
+        verbose_name = "Visita Diária"
+        verbose_name_plural = "Visitas Diárias"
+
+    def __str__(self):
+        return f"{self.date}: {self.count}"
