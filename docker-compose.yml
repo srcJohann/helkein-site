@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   web:
     image: helkein-site:latest
@@ -8,10 +6,12 @@ services:
       dockerfile: Dockerfile
     volumes:
       - media_data:/app/media
+      - db_data:/app/data
     environment:
       - DEBUG=False
       - ALLOWED_HOSTS=helkein.com,localhost,127.0.0.1
       - PYTHONUNBUFFERED=1
+      - DATABASE_PATH=/app/data/db.sqlite3
     tty: true
     stdin_open: true
     networks:
@@ -32,22 +32,23 @@ services:
         delay: 5s
         max_attempts: 3
       labels:
-        traefik.enable: "true"
-        traefik.http.routers.helkein.rule: "Host(`helkein.com`)"
-        traefik.http.routers.helkein.entrypoints: "websecure"
-        traefik.http.routers.helkein.tls.certresolver: "letsencryptresolver"
-        traefik.http.services.helkein.loadbalancer.server.port: "8000"
-        traefik.http.routers.helkein.service: "helkein"
+        - "traefik.enable=true"
+        - "traefik.http.routers.helkein.rule=Host(`helkein.com`)"
+        - "traefik.http.routers.helkein.entrypoints=websecure"
+        - "traefik.http.routers.helkein.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.helkein.loadbalancer.server.port=8000"
+        - "traefik.http.routers.helkein.service=helkein"
     labels:
-        traefik.enable: "true"
-        traefik.http.routers.helkein.rule: "Host(`helkein.com`)"
-        traefik.http.routers.helkein.entrypoints: "websecure"
-        traefik.http.routers.helkein.tls.certresolver: "letsencryptresolver"
-        traefik.http.services.helkein.loadbalancer.server.port: "8000"
-        traefik.http.routers.helkein.service: "helkein"
+      - "traefik.enable=true"
+      - "traefik.http.routers.helkein.rule=Host(`helkein.com`)"
+      - "traefik.http.routers.helkein.entrypoints=websecure"
+      - "traefik.http.routers.helkein.tls.certresolver=letsencryptresolver"
+      - "traefik.http.services.helkein.loadbalancer.server.port=8000"
+      - "traefik.http.routers.helkein.service=helkein"
 
 volumes:
   media_data:
+  db_data:
 
 networks:
   network_public:

@@ -22,6 +22,9 @@ RUN pip install --upgrade pip && \
 # Copy project
 COPY . /app/
 
+# Create data directory for SQLite
+RUN mkdir -p /app/data
+
 # Build tailwind
 # Ensure we have the tailwind binary or it's installed via pip (pytailwindcss)
 RUN python manage.py tailwind install --no-input; exit 0
@@ -30,8 +33,12 @@ RUN python manage.py tailwind build
 # Collect static files
 RUN python manage.py collectstatic --noinput
 
+# Copy entrypoint script
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
 # Expose port
 EXPOSE 8000
 
-# Run gunicorn
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--timeout", "120", "--workers", "3", "--access-logfile", "-", "--error-logfile", "-"]
+# Run entrypoint
+CMD ["/app/entrypoint.sh"]
